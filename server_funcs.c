@@ -83,7 +83,7 @@ int server_add_client(server_t *server, join_t *join) {
         
     mesg_t message_actual;
     mesg_t *join_mesg = &message_actual;
-    join_mesg->kind = BL_SHUTDOWN;
+    join_mesg->kind = BL_JOINED;
     strcpy(join_mesg->name, server->client[n].name);
     server_broadcast(server, join_mesg);        
 
@@ -129,12 +129,12 @@ void server_check_sources(server_t *server) {
     int sources = server->n_clients+1;
 
     struct pollfd pfds[sources];
-    pfds[0].fd = server->join_fd;
-    pfds[0].events = POLLIN; 
-    for(int i = 1; i < server->n_clients+1; i++) {
+    for(int i = 0; i < server->n_clients; i++) {
         pfds[i].fd = server->client[i].to_server_fd;
         pfds[i].events = POLLIN;
     }
+    pfds[sources-1].fd = server->join_fd;
+    pfds[sources-1].events = POLLIN;
 
 
     log_printf("poll()'ing to check %d input sources\n", sources);  // prior to poll() call
@@ -152,13 +152,15 @@ void server_check_sources(server_t *server) {
     }
     
     for(int i = 0; i < server->n_clients; i++) {
+    	printf("checking client %s\n", server->client[i].name);
         if( pfds[i].revents && POLLIN ) {
             server->client[i].data_ready = 1;
             log_printf("client %d '%s' data_ready = %d\n", i, server->client[i].name, 1);    // whether client has data ready
+            //server_handle_client(server,i);
         }
     }
 
-    if (pfds[0].revents && POLLIN) {
+    if (pfds[sources-1].revents && POLLIN) {
         server->join_ready = 1;
         log_printf("join_ready = %d\n", server->join_ready);                       // whether join queue has data
         server_handle_join(server);

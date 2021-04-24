@@ -12,6 +12,8 @@ client_t client_actual;
 client_t *client = &client_actual;
 
 void *client_worker(void *arg) {
+    //client->to_server_fd = open(client->to_server_fname, O_RDWR);
+    
     while (!simpio->end_of_input) {
         simpio_reset(simpio);
         iprintf(simpio, "");
@@ -38,11 +40,16 @@ void *client_worker(void *arg) {
 }
 
 void *server_worker(void *arg) {
+    //client->to_client_fd = open(client->to_client_fname, O_RDWR);
     //int nread;
     while(1) {
         mesg_t message_actual;
         mesg_t *message = &message_actual;
         int nread = read(client->to_client_fd, message, sizeof(*message));
+        
+        if (nread != sizeof(*message)) {
+            continue;
+        }
 
         if (message->kind == BL_SHUTDOWN) {
             break;
@@ -50,9 +57,9 @@ void *server_worker(void *arg) {
         if (message->kind == BL_MESG) {
             iprintf(simpio, "[%s] : %s\n", message->name, message->body);
         } else if (message->kind == BL_JOINED) {
-            iprintf(simpio, "-- %s JOINED --", message->name);
+            iprintf(simpio, "-- %s JOINED --\n", message->name);
         } else if (message->kind == BL_DEPARTED) {
-            iprintf(simpio, "-- %s DEPARTED --", message->name);
+            iprintf(simpio, "-- %s DEPARTED --\n", message->name);
         }
     }
     iprintf(simpio, "== SERVER SHUTDOWN ==\n");
@@ -79,11 +86,11 @@ int main(int argc, char *argv[]) {
     sprintf(client->to_server_fname, "%d_to_server.fifo", getpid());
 
     // create to server and to client fifos
-    mkfifo(client->to_client_fname, O_RDONLY);
-    mkfifo(client->to_server_fname, O_WRONLY);
+    mkfifo(client->to_client_fname, 0666);
+    mkfifo(client->to_server_fname, 0666);
 
-    client->to_client_fd = open(client->to_client_fname, O_RDONLY);
-    client->to_server_fd = open(client->to_server_fname, O_WRONLY);
+    client->to_client_fd = open(client->to_client_fname, O_RDWR);
+    client->to_server_fd = open(client->to_server_fname, O_RDWR);    
     
     // write join request to server fifo
     join_t join_actual;
@@ -93,6 +100,7 @@ int main(int argc, char *argv[]) {
     strcpy(join->to_server_fname, client->to_server_fname);
     int fd = open(server_name, O_WRONLY);
     write(fd, join, sizeof(*join));         // might have to change to ptr
+    close(fd);    
 
     char prompt[MAXNAME+3];
     snprintf(prompt, MAXNAME+3, "%s>> ",client_name); // create a prompt string
@@ -108,10 +116,11 @@ int main(int argc, char *argv[]) {
     simpio_reset_terminal_mode();
     printf("\n");
     
-    close(fd);
     close(client->to_client_fd);
     close(client->to_server_fd);
     remove(client->to_client_fname);
-    remove(client->to_server_fname); 
+    remove(client->to_server_fname);
+    unlink(client->to_client_fname);
+    unlink(client->to_server_fname);
     return 0;
 }
