@@ -118,7 +118,7 @@ int server_remove_client(server_t *server, int idx) {
 void server_broadcast(server_t *server, mesg_t *mesg) {
     for (int i = 0; i < server->n_clients; i++) {
         write(server->client[i].to_client_fd, mesg, sizeof(*mesg));
-    }   
+    }
     return;
 }
 // ADVANCED: Log the broadcast message unless it is a PING which
@@ -152,7 +152,6 @@ void server_check_sources(server_t *server) {
     }
     
     for(int i = 0; i < server->n_clients; i++) {
-    	printf("checking client %s\n", server->client[i].name);
         if( pfds[i].revents && POLLIN ) {
             server->client[i].data_ready = 1;
             log_printf("client %d '%s' data_ready = %d\n", i, server->client[i].name, 1);    // whether client has data ready
@@ -234,6 +233,7 @@ void server_handle_client(server_t *server, int idx) {
         log_printf("client %d '%s' MESSAGE '%s'\n",idx,mesg->name,mesg->body); // indicates client message
         server_broadcast(server, mesg);
     } else if (mesg->kind == BL_DEPARTED) {
+    	server_remove_client(server,idx);
         log_printf("client %d '%s' DEPARTED\n",idx,mesg->name);     // indicates client departed
         server_broadcast(server, mesg);
     }

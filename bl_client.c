@@ -11,9 +11,7 @@ simpio_t *simpio = &simpio_actual;
 client_t client_actual;
 client_t *client = &client_actual;
 
-void *client_worker(void *arg) {
-    //client->to_server_fd = open(client->to_server_fname, O_RDWR);
-    
+void *client_worker(void *arg) {    
     while (!simpio->end_of_input) {
         simpio_reset(simpio);
         iprintf(simpio, "");
@@ -26,8 +24,6 @@ void *client_worker(void *arg) {
             mesg_t *usr_mesg = &usr_mesg_actual;
             strcpy(usr_mesg->name, client->name);
             strcpy(usr_mesg->body, simpio->buf);
-//            strncpy(usr_mesg->name, client->name, sizeof(client->name));
-//            strncpy(usr_mesg->body, simpio->buf, sizeof(simpio->buf));
             usr_mesg->kind = BL_MESG;
             
             // write to the to-server fifo
@@ -35,12 +31,18 @@ void *client_worker(void *arg) {
         }
     }
     iprintf(simpio, "End of Input, Departing\n");
+    // write departed message to server
+    mesg_t depart_mesg_actual;
+    mesg_t *depart_mesg = &depart_mesg_actual;
+    strcpy(depart_mesg->name, client->name);
+    depart_mesg->kind = BL_DEPARTED;
+    write(client->to_server_fd, depart_mesg, sizeof(*depart_mesg));
+    
     pthread_cancel(server_thread); // kill the background thread
     return NULL;
 }
 
 void *server_worker(void *arg) {
-    //client->to_client_fd = open(client->to_client_fname, O_RDWR);
     //int nread;
     while(1) {
         mesg_t message_actual;
@@ -90,7 +92,7 @@ int main(int argc, char *argv[]) {
     mkfifo(client->to_server_fname, 0666);
 
     client->to_client_fd = open(client->to_client_fname, O_RDWR);
-    client->to_server_fd = open(client->to_server_fname, O_RDWR);    
+    client->to_server_fd = open(client->to_server_fname, O_RDWR);
     
     // write join request to server fifo
     join_t join_actual;
