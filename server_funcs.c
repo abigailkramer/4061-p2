@@ -20,9 +20,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     server->join_ready = 0;
 
     remove(server_name);
-    if (mkfifo(server_name, 0666) == -1) {
-        log_printf(":(\n");
-    }
+    mkfifo(server_name, perms);
     
     server->join_fd = open(server_name, O_RDONLY);
 
@@ -96,6 +94,8 @@ int server_remove_client(server_t *server, int idx) {
     close(client->to_server_fd);
     remove(client->to_client_fname);
     remove(client->to_server_fname);
+    unlink(client->to_client_fname);
+    unlink(client->to_server_fname);
     
     for (int i = idx+1; i < server->n_clients; i++) {
         server->client[i-1] = server->client[i];        // def may not be right
