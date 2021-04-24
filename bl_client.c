@@ -65,6 +65,7 @@ void *server_worker(void *arg) {
         }
     }
     iprintf(simpio, "== SERVER SHUTDOWN ==\n");
+    pthread_cancel(client_thread);  // kill the client thread
     return NULL;
 }
 
