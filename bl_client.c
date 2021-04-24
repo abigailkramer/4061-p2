@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
     strcpy(join->name, client->name);
     strcpy(join->to_client_fname, client->to_client_fname);
     strcpy(join->to_server_fname, client->to_server_fname);
-    int fd = open(server_name, O_RDWR);
+    int fd = open(server_name, O_WRONLY);
     write(fd, join, sizeof(*join));         // might have to change to ptr
 
     char prompt[MAXNAME+3];

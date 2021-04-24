@@ -20,7 +20,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     server->join_ready = 0;
 
     remove(server_name);
-    if (mkfifo(server_name, perms) == -1) {
+    if (mkfifo(server_name, 0666) == -1) {
         log_printf(":(\n");
     }
     
