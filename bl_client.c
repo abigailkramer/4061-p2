@@ -22,8 +22,10 @@ void *client_worker(void *arg) {
             // format message
             mesg_t usr_mesg_actual;
             mesg_t *usr_mesg = &usr_mesg_actual;
-            strncpy(usr_mesg->name, client->name, sizeof(client->name));
-            strncpy(usr_mesg->body, simpio->buf, sizeof(simpio->buf));
+            strcpy(usr_mesg->name, client->name);
+            strcpy(usr_mesg->body, simpio->buf);
+//            strncpy(usr_mesg->name, client->name, sizeof(client->name));
+//            strncpy(usr_mesg->body, simpio->buf, sizeof(simpio->buf));
             usr_mesg->kind = BL_MESG;
             
             // write to the to-server fifo
@@ -38,18 +40,19 @@ void *client_worker(void *arg) {
 void *server_worker(void *arg) {
     //int nread;
     while(1) {
-        mesg_t message;
-        int nread = read(client->to_client_fd, &message, sizeof(mesg_t));
+        mesg_t message_actual;
+        mesg_t *message = &message_actual;
+        int nread = read(client->to_client_fd, message, sizeof(*message));
 
-        if (message.kind == BL_SHUTDOWN) {
+        if (message->kind == BL_SHUTDOWN) {
             break;
         }
-        if (message.kind == BL_MESG) {
-            iprintf(simpio, "[%s] : %s\n", message.name, message.body);
-        } else if (message.kind == BL_JOINED) {
-            iprintf(simpio, "-- %s JOINED --", message.name);
-        } else if (message.kind == BL_DEPARTED) {
-            iprintf(simpio, "-- %s DEPARTED --", message.name);
+        if (message->kind == BL_MESG) {
+            iprintf(simpio, "[%s] : %s\n", message->name, message->body);
+        } else if (message->kind == BL_JOINED) {
+            iprintf(simpio, "-- %s JOINED --", message->name);
+        } else if (message->kind == BL_DEPARTED) {
+            iprintf(simpio, "-- %s DEPARTED --", message->name);
         }
     }
     iprintf(simpio, "== SERVER SHUTDOWN ==\n");
@@ -70,9 +73,6 @@ int main(int argc, char *argv[]) {
     char client_name[MAXNAME];
     strncpy(client_name, argv[2], sizeof(argv[2]));
 
-    printf("server name: %s\n",server_name);
-    printf("client name: %s\n", client_name);
-
     // create to-client and to-server fifos
     strcpy(client->name, client_name);
     sprintf(client->to_client_fname, "%d_to_client.fifo", getpid());
@@ -86,9 +86,6 @@ int main(int argc, char *argv[]) {
     client->to_server_fd = open(client->to_server_fname, O_WRONLY);
     
     // write join request to server fifo
-    printf("%s\n",client->to_client_fname);
-    printf("%s\n",client->to_server_fname);
-
     join_t join_actual;
     join_t *join = &join_actual;
     strcpy(join->name, client->name);

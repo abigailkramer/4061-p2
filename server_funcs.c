@@ -20,9 +20,9 @@ void server_start(server_t *server, char *server_name, int perms) {
     server->join_ready = 0;
 
     remove(server_name);
-    mkfifo(server_name, perms);
+    mkfifo(server_name, 0666);
     
-    server->join_fd = open(server_name, O_RDONLY);
+    server->join_fd = open(server_name, perms);
 
     log_printf("END: server_start()\n");                // at end of function
     return;
@@ -59,24 +59,33 @@ void server_shutdown(server_t *server) {
 
 int server_add_client(server_t *server, join_t *join) {
     log_printf("BEGIN: server_add_client()\n");         // at beginning of function
-    int success = 1;
-
-    if (server->n_clients < MAXCLIENTS) {
-        success = 0;
-        int n = server->n_clients;
-        strcpy(server->client[n].to_client_fname, join->to_client_fname);
-        strcpy(server->client[n].to_server_fname, join->to_server_fname);
-        strcpy(server->client[n].name, join->name);
-
-        int sfd = open(server->client[n].to_server_fname, O_RDONLY);
-        server->client[n].to_server_fd = sfd;
-
-        int cfd = open(server->client[n].to_client_fname, O_WRONLY);
-        server->client[n].to_client_fd = cfd;
-        server->client[n].data_ready = 0;
-
-        server->n_clients++;
+    int success = 0;
+    
+    if (server->n_clients >= MAXCLIENTS) {
+    	log_printf("too many clients\n");
+    	success = 1;
     }
+
+    success = 0;
+    int n = server->n_clients;
+    strcpy(server->client[n].to_client_fname, join->to_client_fname);
+    strcpy(server->client[n].to_server_fname, join->to_server_fname);
+    strcpy(server->client[n].name, join->name);
+
+    int sfd = open(server->client[n].to_server_fname, O_RDONLY);
+    server->client[n].to_server_fd = sfd;
+
+    int cfd = open(server->client[n].to_client_fname, O_WRONLY);
+    server->client[n].to_client_fd = cfd;
+    server->client[n].data_ready = 0;
+    
+    server->n_clients++;    
+        
+    mesg_t message_actual;
+    mesg_t *join_mesg = &message_actual;
+    join_mesg->kind = BL_SHUTDOWN;
+    strcpy(join_mesg->name, server->client[n].name);
+    server_broadcast(server, join_mesg);        
 
     log_printf("END: server_add_client()\n");           // at end of function
     return success;
