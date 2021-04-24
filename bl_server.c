@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
     server_t server_actual;
     server_t *server = &server_actual;
-    server_start(server, server_name, O_RDONLY);
+    server_start(server, server_name, O_RDWR);
 
     while(!SHUTDOWN) {
         server_check_sources(server);

@@ -79,12 +79,8 @@ int main(int argc, char *argv[]) {
     sprintf(client->to_server_fname, "%d_to_server.fifo", getpid());
 
     // create to server and to client fifos
-    if (mkfifo(client->to_client_fname, O_RDONLY) == -1) {
-        printf("FUCK\n");
-    }
-    if (mkfifo(client->to_server_fname, O_WRONLY) == -1) {
-        printf("FUCK\n");
-    }
+    mkfifo(client->to_client_fname, O_RDONLY);
+    mkfifo(client->to_server_fname, O_WRONLY);
 
     client->to_client_fd = open(client->to_client_fname, O_RDONLY);
     client->to_server_fd = open(client->to_server_fname, O_WRONLY);
