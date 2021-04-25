@@ -15,7 +15,7 @@ client_t *server_get_client(server_t *server, int idx) {
 void server_start(server_t *server, char *server_name, int perms) {
     log_printf("BEGIN: server_start()\n");              // at beginning of function
 
-    strcpy(server->server_name, server_name);
+    strncpy(server->server_name, server_name, sizeof(server_name));
     server->n_clients = 0;
     server->join_ready = 0;
 
@@ -23,6 +23,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     mkfifo(server_name, 0666);
     
     server->join_fd = open(server_name, perms);
+    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server_name);    
 
     log_printf("END: server_start()\n");                // at end of function
     return;
@@ -36,11 +37,11 @@ void server_start(server_t *server, char *server_name, int perms) {
 void server_shutdown(server_t *server) {
     log_printf("BEGIN: server_shutdown()\n");
 
-    close(server->join_fd);
+    int fd = close(server->join_fd);
+    check_fail(fd==-1, 1, "Couldn't close file %s", server->join_fd);
     remove(server->server_name);
     unlink(server->server_name);
 
-    // unlink (remove) - so no further clients can join
     // send a BL_SHUTDOWN message to all clients
     mesg_t shutdown_actual;
     mesg_t *shutdown = &shutdown_actual;
@@ -59,23 +60,24 @@ void server_shutdown(server_t *server) {
 
 int server_add_client(server_t *server, join_t *join) {
     log_printf("BEGIN: server_add_client()\n");         // at beginning of function
-    int success = 0;
     
+    check_fail(server->n_clients >= MAXCLIENTS, 0, "Index out of bounds: %d vs max %d\n",server->n_clients,MAXCLIENTS);
     if (server->n_clients >= MAXCLIENTS) {
-    	log_printf("too many clients\n");
-    	success = 1;
+    	log_printf("END: server_add_client()\n");           // at end of function
+    	return 1;
     }
 
-    success = 0;
     int n = server->n_clients;
-    strcpy(server->client[n].to_client_fname, join->to_client_fname);
-    strcpy(server->client[n].to_server_fname, join->to_server_fname);
-    strcpy(server->client[n].name, join->name);
+    strncpy(server->client[n].to_client_fname, join->to_client_fname, sizeof(join->to_client_fname));
+    strncpy(server->client[n].to_server_fname, join->to_server_fname, sizeof(join->to_server_fname));
+    strncpy(server->client[n].name, join->name, sizeof(join->name));
 
     int sfd = open(server->client[n].to_server_fname, O_RDONLY);
+    check_fail(sfd==-1, 1, "Couldn't open file %s", server->client[n].to_server_fname);   
     server->client[n].to_server_fd = sfd;
 
     int cfd = open(server->client[n].to_client_fname, O_WRONLY);
+    check_fail(cfd==-1, 1, "Couldn't open file %s", server->client[n].to_client_fname);    
     server->client[n].to_client_fd = cfd;
     server->client[n].data_ready = 0;
     
@@ -84,11 +86,11 @@ int server_add_client(server_t *server, join_t *join) {
     mesg_t message_actual;
     mesg_t *join_mesg = &message_actual;
     join_mesg->kind = BL_JOINED;
-    strcpy(join_mesg->name, server->client[n].name);
+    strncpy(join_mesg->name, server->client[n].name, sizeof(server->client[n].name));
     server_broadcast(server, join_mesg);        
 
     log_printf("END: server_add_client()\n");           // at end of function
-    return success;
+    return 0;
 }
 
 
@@ -107,7 +109,7 @@ int server_remove_client(server_t *server, int idx) {
     unlink(client->to_server_fname);
     
     for (int i = idx+1; i < server->n_clients; i++) {
-        server->client[i-1] = server->client[i];        // def may not be right
+        server->client[i-1] = server->client[i];
     }
     server->n_clients--;
 
@@ -116,9 +118,11 @@ int server_remove_client(server_t *server, int idx) {
 
 
 void server_broadcast(server_t *server, mesg_t *mesg) {
+    dbg_printf("server_broadcast()\n");
     for (int i = 0; i < server->n_clients; i++) {
         write(server->client[i].to_client_fd, mesg, sizeof(*mesg));
     }
+    dbg_printf("end server_broadcast()\n");
     return;
 }
 // ADVANCED: Log the broadcast message unless it is a PING which
@@ -141,13 +145,12 @@ void server_check_sources(server_t *server) {
 
     int ret = poll(pfds, sources, -1);
 
-    log_printf("poll() completed with return value %d\n", ret); // after poll() call
+    log_printf("poll() completed with return value %d\n", ret);     // after poll() call
     
     if (ret == -1) {
-        log_printf("poll() interrupted by a signal\n");            // if poll interrupted by a signal
+        log_printf("poll() interrupted by a signal\n");             // if poll interrupted by a signal
         
-        // initiate server shutdown
-        server_shutdown(server);
+        // initiate server shutdown by returning immediately
         return;
     }
     
@@ -155,7 +158,6 @@ void server_check_sources(server_t *server) {
         if( pfds[i].revents && POLLIN ) {
             server->client[i].data_ready = 1;
             log_printf("client %d '%s' data_ready = %d\n", i, server->client[i].name, 1);    // whether client has data ready
-            //server_handle_client(server,i);
         }
     }
 
@@ -167,6 +169,7 @@ void server_check_sources(server_t *server) {
     
 
     log_printf("END: server_check_sources()\n");               // at end of function
+    dbg_printf("Finished checking sources\n");
     return;
 }
 // Checks all sources of data for the server to determine if any are

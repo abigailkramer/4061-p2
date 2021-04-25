@@ -2,6 +2,8 @@
 
 #include "blather.h"
 
+int DO_ADVANCED = 0;
+
 // track when SIGINT or SIGTERM have been received
 int SHUTDOWN = 0;
 void shutdown_handler(int signum) {
@@ -15,7 +17,11 @@ int main(int argc, char *argv[]) {
         printf("usage: %s <server_name>\n",argv[0]);
         exit(1);
     }
-    //char *server_name = argv[1];
+    
+    if (getenv("BL_ADVANCED")) {
+    	DO_ADVANCED = 1;
+    }
+
     char server_name[MAXNAME];
     strncpy(server_name, argv[1], sizeof(argv[1]));
     strcat(server_name, ".fifo");

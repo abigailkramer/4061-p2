@@ -22,8 +22,8 @@ void *client_worker(void *arg) {
             // format message
             mesg_t usr_mesg_actual;
             mesg_t *usr_mesg = &usr_mesg_actual;
-            strcpy(usr_mesg->name, client->name);
-            strcpy(usr_mesg->body, simpio->buf);
+            strncpy(usr_mesg->name, client->name, sizeof(client->name));
+            strncpy(usr_mesg->body, simpio->buf, sizeof(simpio->buf));
             usr_mesg->kind = BL_MESG;
             
             // write to the to-server fifo
@@ -31,14 +31,15 @@ void *client_worker(void *arg) {
         }
     }
     iprintf(simpio, "End of Input, Departing\n");
+    
     // write departed message to server
     mesg_t depart_mesg_actual;
     mesg_t *depart_mesg = &depart_mesg_actual;
-    strcpy(depart_mesg->name, client->name);
+    strncpy(depart_mesg->name, client->name, sizeof(client->name));
     depart_mesg->kind = BL_DEPARTED;
     write(client->to_server_fd, depart_mesg, sizeof(*depart_mesg));
     
-    pthread_cancel(server_thread); // kill the background thread
+    pthread_cancel(server_thread); // kill the server thread
     return NULL;
 }
 
@@ -84,7 +85,7 @@ int main(int argc, char *argv[]) {
     strncpy(client_name, argv[2], sizeof(argv[2]));
 
     // create to-client and to-server fifos
-    strcpy(client->name, client_name);
+    strncpy(client->name, client_name, sizeof(client_name));
     sprintf(client->to_client_fname, "%d_to_client.fifo", getpid());
     sprintf(client->to_server_fname, "%d_to_server.fifo", getpid());
 
@@ -93,17 +94,24 @@ int main(int argc, char *argv[]) {
     mkfifo(client->to_server_fname, 0666);
 
     client->to_client_fd = open(client->to_client_fname, O_RDWR);
+    check_fail(client->to_client_fd==-1, 1, "Couldn't open file %s", client->to_client_fname);
+    
     client->to_server_fd = open(client->to_server_fname, O_RDWR);
+    check_fail(client->to_server_fd==-1, 1, "Couldn't open file %s", client->to_server_fname);    
     
     // write join request to server fifo
     join_t join_actual;
     join_t *join = &join_actual;
-    strcpy(join->name, client->name);
-    strcpy(join->to_client_fname, client->to_client_fname);
-    strcpy(join->to_server_fname, client->to_server_fname);
+    strncpy(join->name, client->name, sizeof(client->name));
+    strncpy(join->to_client_fname, client->to_client_fname, sizeof(client->to_client_fname));
+    strncpy(join->to_server_fname, client->to_server_fname, sizeof(client->to_server_fname));
+
     int fd = open(server_name, O_WRONLY);
-    write(fd, join, sizeof(*join));         // might have to change to ptr
-    close(fd);    
+    check_fail(fd==-1, 1, "Couldn't open file %s", server_name);
+    
+    write(fd, join, sizeof(*join));
+    close(fd);    // client won't need join_fd anymore
+    unlink(server_name);
 
     char prompt[MAXNAME+3];
     snprintf(prompt, MAXNAME+3, "%s>> ",client_name); // create a prompt string
