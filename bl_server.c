@@ -24,7 +24,6 @@ int main(int argc, char *argv[]) {
 
     char server_name[MAXNAME];
     strncpy(server_name, argv[1], sizeof(argv[1]));
-    strcat(server_name, ".fifo");
 
     struct sigaction my_sa = {};
     my_sa.sa_handler = shutdown_handler;

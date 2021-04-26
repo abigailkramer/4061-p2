@@ -131,7 +131,5 @@ int main(int argc, char *argv[]) {
     close(client->to_server_fd);
     remove(client->to_client_fname);
     remove(client->to_server_fname);
-    unlink(client->to_client_fname);
-    unlink(client->to_server_fname);
     return 0;
 }

@@ -16,14 +16,33 @@ void server_start(server_t *server, char *server_name, int perms) {
     log_printf("BEGIN: server_start()\n");              // at beginning of function
 
     strncpy(server->server_name, server_name, sizeof(server_name));
+    strncat(server_name, ".fifo", 6);
     server->n_clients = 0;
     server->join_ready = 0;
 
     remove(server_name);
     mkfifo(server_name, 0666);
-    
     server->join_fd = open(server_name, perms);
-    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server_name);    
+    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server_name);
+
+    // ADVANCED: create log and semaphore
+    char log_name[MAXNAME];
+    strncpy(log_name, server_name, sizeof(server_name));
+    strncat(server_name, ".log", 5);
+    char sem_name[MAXNAME] = "/";
+    strncat(sem_name, server_name, sizeof(server_name));
+    strncat(sem_name, ".sem", 5);
+    printf("%s\n",sem_name);
+
+    server->log_fd = open(log_name, O_CREAT | O_RDWR | O_APPEND , S_IRUSR | S_IWUSR);
+    server->log_sem = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
+    sem_init(server->log_sem, 1, 1);
+
+    // create initial who_t structure
+    who_t who;
+    who.n_clients = server->n_clients;
+
+    // write who_t to the log file
 
     log_printf("END: server_start()\n");                // at end of function
     return;
@@ -40,7 +59,6 @@ void server_shutdown(server_t *server) {
     int fd = close(server->join_fd);
     check_fail(fd==-1, 1, "Couldn't close file %s", server->join_fd);
     remove(server->server_name);
-    unlink(server->server_name);
 
     // send a BL_SHUTDOWN message to all clients
     mesg_t shutdown_actual;
@@ -105,8 +123,6 @@ int server_remove_client(server_t *server, int idx) {
     close(client->to_server_fd);
     remove(client->to_client_fname);
     remove(client->to_server_fname);
-    unlink(client->to_client_fname);
-    unlink(client->to_server_fname);
     
     for (int i = idx+1; i < server->n_clients; i++) {
         server->client[i-1] = server->client[i];
