@@ -139,8 +139,11 @@ int server_remove_client(server_t *server, int idx) {
 void server_broadcast(server_t *server, mesg_t *mesg) {
     dbg_printf("server_broadcast()\n");
     
-    // check if ping - don't write to log
-    // add in a write() to log --> open sem, write, close sem
+    if (mesg.kind != BL_PING) {
+    	//open sem
+    	//write in log
+    	//close sem
+    }
     
     for (int i = 0; i < server->n_clients; i++) {
         write(server->client[i].to_client_fd, mesg, sizeof(*mesg));
@@ -162,7 +165,6 @@ void server_check_sources(server_t *server) {
     }
     pfds[sources-1].fd = server->join_fd;
     pfds[sources-1].events = POLLIN;
-
 
     log_printf("poll()'ing to check %d input sources\n", sources);  // prior to poll() call
 
@@ -190,7 +192,6 @@ void server_check_sources(server_t *server) {
         server_handle_join(server);
     }
     
-
     log_printf("END: server_check_sources()\n");               // at end of function
     dbg_printf("Finished checking sources\n");
     return;
@@ -253,18 +254,17 @@ void server_handle_client(server_t *server, int idx) {
     }
 
     client->data_ready = 0;
+    // ADVANCED: update last_contact_time
+    client->last_contact_time = server->time_sec;
     log_printf("END: server_handle_client()\n");             // at end of function 
     return;
 }
-// ADVANCED: Update the last_contact_time of the client to the current
-// server time_sec.
 
 
 void server_tick(server_t *server) {
     server->time_sec++;                     // this seems too easy lol?
     return;
 }
-// ADVANCED: Increment the time for the server
 
 
 void server_ping_clients(server_t *server) {
@@ -274,7 +274,6 @@ void server_ping_clients(server_t *server) {
     server_broadcast(server, ping);
     return;
 }
-// ADVANCED: Ping all clients in the server by broadcasting a ping.
 
 
 void server_remove_disconnected(server_t *server, int disconnect_secs) {
@@ -306,6 +305,14 @@ void server_remove_disconnected(server_t *server, int disconnect_secs) {
 
 
 void server_write_who(server_t *server) {
+    // lock semaphore
+    
+    // complete write to log file in its own thread
+    // consider pwrite() to write to a specific location
+    // in an open file descriptor -- which won't alter
+    // the position of log_fd so that appends continue
+    // to the end of the file
+
     return;
 }
 // ADVANCED: Write the current set of clients logged into the server
@@ -320,6 +327,9 @@ void server_write_who(server_t *server) {
 
 
 void server_log_message(server_t *server, mesg_t *mesg) {
+
+    write(server->log_fd, mesg, sizeof(*mesg));			// probs needs more
+
     return;
 }
 // ADVANCED: Write the given message to the end of log file associated

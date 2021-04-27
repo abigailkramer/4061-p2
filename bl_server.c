@@ -38,6 +38,13 @@ int main(int argc, char *argv[]) {
 
     while(!SHUTDOWN) {
         server_check_sources(server);
+        
+        // ADVANCED
+        if (DO_ADVANCED) {
+            server_tick(server);
+            server_remove_disconnected(server, 10);	// 10 is placeholder disconnect_secs    
+        }
+        
         for (int i = 0; i < server->n_clients; i++) {
             if (server->client[i].data_ready) {
                 server_handle_client(server,i);
