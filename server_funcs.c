@@ -15,8 +15,10 @@ client_t *server_get_client(server_t *server, int idx) {
 void server_start(server_t *server, char *server_name, int perms) {
     log_printf("BEGIN: server_start()\n");              // at beginning of function
 
+//    char file_name[MAXNAME];
+//    strncpy(file_name, server_name, sizeof(server_name));
     strncpy(server->server_name, server_name, sizeof(server_name));
-    strncat(server_name, ".fifo", 6);
+    strncat(server->server_name, ".fifo", 6);
     server->n_clients = 0;
     server->join_ready = 0;
 
@@ -28,11 +30,11 @@ void server_start(server_t *server, char *server_name, int perms) {
     // ADVANCED: create log and semaphore
     char log_name[MAXNAME];
     strncpy(log_name, server_name, sizeof(server_name));
-    strncat(server_name, ".log", 5);
+    strncat(log_name, ".log", 5);
+    
     char sem_name[MAXNAME] = "/";
     strncat(sem_name, server_name, sizeof(server_name));
     strncat(sem_name, ".sem", 5);
-    printf("%s\n",sem_name);
 
     server->log_fd = open(log_name, O_CREAT | O_RDWR | O_APPEND , S_IRUSR | S_IWUSR);
     server->log_sem = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
@@ -43,7 +45,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     who.n_clients = server->n_clients;
 
     // write who_t to the log file
-    write(server->log_fd, who, sizeof(who));
+    write(server->log_fd, &who, sizeof(who));
 
     log_printf("END: server_start()\n");                // at end of function
     return;
