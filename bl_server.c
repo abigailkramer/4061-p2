@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
         // ADVANCED
         if (DO_ADVANCED) {
             server_tick(server);
+            server_ping_clients(server);
             server_remove_disconnected(server, 10);	// 10 is placeholder disconnect_secs    
         }
         

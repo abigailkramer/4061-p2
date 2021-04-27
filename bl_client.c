@@ -44,7 +44,6 @@ void *client_worker(void *arg) {
 }
 
 void *server_worker(void *arg) {
-    //int nread;
     while(1) {
         mesg_t message_actual;
         mesg_t *message = &message_actual;
@@ -63,9 +62,17 @@ void *server_worker(void *arg) {
             iprintf(simpio, "-- %s JOINED --\n", message->name);
         } else if (message->kind == BL_DEPARTED) {
             iprintf(simpio, "-- %s DEPARTED --\n", message->name);
-        }
+        } else if (message->kind == BL_PING) {
+            // respond w/ ping back
+            mesg_t ping_response_actual;
+            mesg_t *ping_response = &ping_response_actual;
+            ping_response->kind = BL_PING;
+            
+            // write to the to-server fifo
+            write(client->to_server_fd, ping_response, sizeof(*ping_response));        
+    	}
     }
-    iprintf(simpio, "== SERVER SHUTDOWN ==\n");
+    iprintf(simpio, "!!! server is shutting down !!!\n");
     pthread_cancel(client_thread);  // kill the client thread
     return NULL;
 }

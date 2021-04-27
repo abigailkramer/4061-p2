@@ -15,17 +15,15 @@ client_t *server_get_client(server_t *server, int idx) {
 void server_start(server_t *server, char *server_name, int perms) {
     log_printf("BEGIN: server_start()\n");              // at beginning of function
 
-//    char file_name[MAXNAME];
-//    strncpy(file_name, server_name, sizeof(server_name));
     strncpy(server->server_name, server_name, sizeof(server_name));
     strncat(server->server_name, ".fifo", 6);
     server->n_clients = 0;
     server->join_ready = 0;
 
-    remove(server_name);
-    mkfifo(server_name, 0666);
-    server->join_fd = open(server_name, perms);
-    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server_name);
+    remove(server->server_name);
+    mkfifo(server->server_name, 0666);
+    server->join_fd = open(server->server_name, perms);
+    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server->server_name);
 
     // ADVANCED: create log and semaphore
     char log_name[MAXNAME];
@@ -62,6 +60,9 @@ void server_shutdown(server_t *server) {
     int fd = close(server->join_fd);
     check_fail(fd==-1, 1, "Couldn't close file %s", server->join_fd);
     remove(server->server_name);
+    
+    fd = close(server->log_fd);
+    check_fail(fd==-1, 1, "Couldn't close file %s", server->log_fd);
 
     // send a BL_SHUTDOWN message to all clients
     mesg_t shutdown_actual;
@@ -139,7 +140,7 @@ int server_remove_client(server_t *server, int idx) {
 void server_broadcast(server_t *server, mesg_t *mesg) {
     dbg_printf("server_broadcast()\n");
     
-    if (mesg.kind != BL_PING) {
+    if (mesg->kind != BL_PING) {
     	//open sem
     	//write in log
     	//close sem
@@ -262,7 +263,7 @@ void server_handle_client(server_t *server, int idx) {
 
 
 void server_tick(server_t *server) {
-    server->time_sec++;                     // this seems too easy lol?
+    server->time_sec++;
     return;
 }
 
@@ -270,7 +271,7 @@ void server_tick(server_t *server) {
 void server_ping_clients(server_t *server) {
     mesg_t ping_actual;
     mesg_t *ping = &ping_actual;
-    ping.kind = BL_PING;
+    ping->kind = BL_PING;
     server_broadcast(server, ping);
     return;
 }
@@ -279,7 +280,8 @@ void server_ping_clients(server_t *server) {
 void server_remove_disconnected(server_t *server, int disconnect_secs) {
 
     for (int i = 0; i < server->n_clients; i++) {
-    	if (server->client[i].last_contact_time >= disconnect_secs) {
+    	int time = server->time_sec - server->client[i].last_contact_time;
+    	if (time >= disconnect_secs) {
     	    server_remove_client(server,i);
     	    
     	    // broadcast disconnect message
