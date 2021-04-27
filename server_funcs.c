@@ -138,6 +138,10 @@ int server_remove_client(server_t *server, int idx) {
 
 void server_broadcast(server_t *server, mesg_t *mesg) {
     dbg_printf("server_broadcast()\n");
+    
+    // check if ping - don't write to log
+    // add in a write() to log --> open sem, write, close sem
+    
     for (int i = 0; i < server->n_clients; i++) {
         write(server->client[i].to_client_fd, mesg, sizeof(*mesg));
     }
@@ -191,22 +195,12 @@ void server_check_sources(server_t *server) {
     dbg_printf("Finished checking sources\n");
     return;
 }
-// Checks all sources of data for the server to determine if any are
-// ready for reading. Sets the servers join_ready flag and the
-// data_ready flags of each of client if data is ready for them.
-// Makes use of the poll() system call to efficiently determine which
-// sources are ready.
-// 
-// NOTE: the poll() system call will return -1 if it is interrupted by
-// the process receiving a signal. This is expected to initiate server
-// shutdown and is handled by returning immediately from this function.
 
 
 int server_join_ready(server_t *server) {
     return server->join_ready;
 }
-// Return the join_ready flag from the server which indicates whether
-// a call to server_handle_join() is safe.
+
 
 void server_handle_join(server_t *server) {
     if (!server_join_ready(server)) {
@@ -228,14 +222,12 @@ void server_handle_join(server_t *server) {
 
     return;
 }
-// Call this function only if server_join_ready() returns true. Read a
-// join request and add the new client to the server. After finishing,
-// set the servers join_ready flag to 0.
 
 
 int server_client_ready(server_t *server, int idx) {
     return server_get_client(server,idx)->data_ready;
 }
+
 
 void server_handle_client(server_t *server, int idx) {
     if (!server_client_ready) {
@@ -276,12 +268,32 @@ void server_tick(server_t *server) {
 
 
 void server_ping_clients(server_t *server) {
+    mesg_t ping_actual;
+    mesg_t *ping = &ping_actual;
+    ping.kind = BL_PING;
+    server_broadcast(server, ping);
     return;
 }
 // ADVANCED: Ping all clients in the server by broadcasting a ping.
 
 
 void server_remove_disconnected(server_t *server, int disconnect_secs) {
+
+    for (int i = 0; i < server->n_clients; i++) {
+    	if (server->client[i].last_contact_time >= disconnect_secs) {
+    	    server_remove_client(server,i);
+    	    
+    	    // broadcast disconnect message
+    	    mesg_t disconnect_actual;
+    	    mesg_t *disconnect = &disconnect_actual;
+    	    disconnect->kind = BL_DISCONNECTED;
+    	    strncpy(disconnect->name, server->client[i].name, sizeof(server->client[i].name));
+    	    server_broadcast(server, disconnect);
+    	    
+    	    i--;
+    	}    
+    }
+
     return;
 }
 // ADVANCED: Check all clients to see if they have contacted the
