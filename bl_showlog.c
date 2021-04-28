@@ -12,16 +12,49 @@ int main (int argc, char *argv[]) {
     }
 
     char log_name[MAXNAME];
-    strncpy(log_name, argv[1], sizeof(argv[1]));
+    strncpy(log_name, argv[1], sizeof(argv[1]));        // should already be in .log form
 
     // open log
+    int fd = open(log_name, O_RDONLY);
+    check_fail(fd==-1, 1, "Couldn't open file %s", log_name);
 
-    // maybe start w/ just reading the one who_t
+    // read the one who_t struct at the beginning
+    who_t who;
+    read(fd, &who, sizeof(who));
+    printf("%d CLIENTS\n", who.n_clients);
+    for (int i = 0; i < who.n_clients; i++) {
+        printf("%d : %s\n", i, who.names[i]);
+    }
 
-    // then make a for/while loop to read through mesg_t structs?
+    // read through the mesg_t structs until the end of the file
+    printf("MESSAGES\n");
+    while(1) {
+        mesg_t message;
+        int nread = read(fd, &message, sizeof(message));
 
+        // nothing else to read
+        if (nread != sizeof(message)) {
+            break;
+        }
+
+        if (message->kind == BL_SHUTDOWN) {
+            iprintf(simpio, "!!! server is shutting down !!!\n");
+        } else if (message->kind == BL_MESG) {
+            iprintf(simpio, "[%s] : %s\n", message->name, message->body);
+        } else if (message->kind == BL_JOINED) {
+            iprintf(simpio, "-- %s JOINED --\n", message->name);
+        } else if (message->kind == BL_DEPARTED) {
+            iprintf(simpio, "-- %s DEPARTED --\n", message->name);
+        } else if (message->kind == BL_DISCONNECTED) {
+            iprintf(simpio, "-- %s DISCONNECTED --\n", message->name);
+        }
+        // don't need to check for BL_PING - not written to log files
+
+    }
 
     // close log
+    int close = close(fd);
+    check_fail(close==-1, 1, "Couldn't close file %s", fd);
 
     return 0;
 }

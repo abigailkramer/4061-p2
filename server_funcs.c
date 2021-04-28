@@ -35,6 +35,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     strncat(sem_name, ".sem", 5);
 
     server->log_fd = open(log_name, O_CREAT | O_RDWR | O_APPEND , S_IRUSR | S_IWUSR);
+    check_fail(server->log_fd==-1, 1, "Couldn't open file %s", log_name);
     server->log_sem = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
     sem_init(server->log_sem, 1, 1);
 

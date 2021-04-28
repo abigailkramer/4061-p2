@@ -62,6 +62,8 @@ void *server_worker(void *arg) {
             iprintf(simpio, "-- %s JOINED --\n", message->name);
         } else if (message->kind == BL_DEPARTED) {
             iprintf(simpio, "-- %s DEPARTED --\n", message->name);
+        } else if (message->kind == BL_DISCONNECTED) {
+            iprintf(simpio, "-- %s DISCONNECTED --\n", message->name);
         } else if (message->kind == BL_PING) {
             // respond w/ ping back
             mesg_t ping_response_actual;
