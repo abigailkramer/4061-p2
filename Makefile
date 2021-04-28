@@ -10,6 +10,9 @@ bl_server : bl_server.c
 bl_client : bl_client.c
 	$(CC) -o $@ $^ simpio.c util.c -lpthread
 
+bl_showlog : bl_showlog.c
+	$(CC) -o $@ $^ util.c -lpthread
+
 clean: 
 	rm -f bl_server bl_client *.fifo
 

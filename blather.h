@@ -12,6 +12,7 @@
 #include <semaphore.h>
 #include <poll.h>
 #include <limits.h>             // added for NAME_MAX
+#include <unistd.h>             // ADVANCED: added for alarm() functionality
 
 #define DEBUG 1                 // turn of/off debug printing
 #define PROMPT ">> "            // prompt for client UI
