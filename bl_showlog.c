@@ -11,7 +11,7 @@ int main (int argc, char *argv[]) {
         exit(1);
     }
 
-    char log_name[MAXNAME];
+    char log_name[MAXPATH];
     strncpy(log_name, argv[1], sizeof(argv[1]));        // should already be in .log form
 
     // open log
