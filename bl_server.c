@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     	DO_ADVANCED = 1;
     }
 
-    char server_name[MAXPATH];
+    char server_name[MAXNAME];
     strncpy(server_name, argv[1], sizeof(argv[1]));
 
     struct sigaction my_sa = {};
