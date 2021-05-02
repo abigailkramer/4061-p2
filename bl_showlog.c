@@ -32,24 +32,25 @@ int main (int argc, char *argv[]) {
     printf("MESSAGES\n");
     while(1) {
         //mesg_t message_actual;
-        mesg_t message;
-        int nread = read(fd, &message, sizeof(message));
+        mesg_t message_actual;
+        mesg_t *message = &message_actual;
+        int nread = read(fd, message, sizeof(*message));
 
         // nothing else to read
-        if (nread != sizeof(message)) {
+        if (nread != sizeof(*message)) {
             break;
         }
 
-        if (message.kind == BL_SHUTDOWN) {
+        if (message->kind == BL_SHUTDOWN) {
             printf("!!! server is shutting down !!!\n");
-        } else if (message.kind == BL_MESG) {
-            printf("[%s] : %s\n", message.name, message.body);
-        } else if (message.kind == BL_JOINED) {
-            printf("-- %s JOINED --\n", message.name);
-        } else if (message.kind == BL_DEPARTED) {
-            printf("-- %s DEPARTED --\n", message.name);
-        } else if (message.kind == BL_DISCONNECTED) {
-            printf("-- %s DISCONNECTED --\n", message.name);
+        } else if (message->kind == BL_MESG) {
+            printf("[%s] : %s\n", message->name, message->body);
+        } else if (message->kind == BL_JOINED) {
+            printf("-- %s JOINED --\n", message->name);
+        } else if (message->kind == BL_DEPARTED) {
+            printf("-- %s DEPARTED --\n", message->name);
+        } else if (message->kind == BL_DISCONNECTED) {
+            printf("-- %s DISCONNECTED --\n", message->name);
         }
         // don't need to check for BL_PING - not written to log files
 
