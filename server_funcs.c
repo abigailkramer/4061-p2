@@ -16,23 +16,23 @@ void server_start(server_t *server, char *server_name, int perms) {
     log_printf("BEGIN: server_start()\n");              // at beginning of function
 
     strncpy(server->server_name, server_name, sizeof(server_name));
-    strncat(server_name, ".fifo", 6);
+    strncat(server->server_name, ".fifo", 6);
     server->n_clients = 0;
     server->join_ready = 0;
 
-    remove(server_name);
-    mkfifo(server_name, 0666);
-    server->join_fd = open(server_name, perms);
-    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server_name);
+    remove(server->server_name);
+    mkfifo(server->server_name, 0666);
+    server->join_fd = open(server->server_name, perms);
+    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server->server_name);
 
     // ADVANCED: create log and semaphore
     char log_name[MAXNAME];
     strncpy(log_name, server_name, sizeof(server_name));
-    strncat(server_name, ".log", 5);
+    strncat(log_name, ".log", 5);
+    
     char sem_name[MAXNAME] = "/";
     strncat(sem_name, server_name, sizeof(server_name));
     strncat(sem_name, ".sem", 5);
-    printf("%s\n",sem_name);
 
     server->log_fd = open(log_name, O_CREAT | O_RDWR | O_APPEND , S_IRUSR | S_IWUSR);
     server->log_sem = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
@@ -43,6 +43,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     who.n_clients = server->n_clients;
 
     // write who_t to the log file
+    write(server->log_fd, &who, sizeof(who));
 
     log_printf("END: server_start()\n");                // at end of function
     return;
@@ -59,6 +60,9 @@ void server_shutdown(server_t *server) {
     int fd = close(server->join_fd);
     check_fail(fd==-1, 1, "Couldn't close file %s", server->join_fd);
     remove(server->server_name);
+    
+    fd = close(server->log_fd);
+    check_fail(fd==-1, 1, "Couldn't close file %s", server->log_fd);
 
     // send a BL_SHUTDOWN message to all clients
     mesg_t shutdown_actual;
@@ -135,6 +139,13 @@ int server_remove_client(server_t *server, int idx) {
 
 void server_broadcast(server_t *server, mesg_t *mesg) {
     dbg_printf("server_broadcast()\n");
+    
+    if (mesg->kind != BL_PING) {
+    	//open sem
+    	//write in log
+    	//close sem
+    }
+    
     for (int i = 0; i < server->n_clients; i++) {
         write(server->client[i].to_client_fd, mesg, sizeof(*mesg));
     }
@@ -155,7 +166,6 @@ void server_check_sources(server_t *server) {
     }
     pfds[sources-1].fd = server->join_fd;
     pfds[sources-1].events = POLLIN;
-
 
     log_printf("poll()'ing to check %d input sources\n", sources);  // prior to poll() call
 
@@ -183,27 +193,16 @@ void server_check_sources(server_t *server) {
         server_handle_join(server);
     }
     
-
     log_printf("END: server_check_sources()\n");               // at end of function
     dbg_printf("Finished checking sources\n");
     return;
 }
-// Checks all sources of data for the server to determine if any are
-// ready for reading. Sets the servers join_ready flag and the
-// data_ready flags of each of client if data is ready for them.
-// Makes use of the poll() system call to efficiently determine which
-// sources are ready.
-// 
-// NOTE: the poll() system call will return -1 if it is interrupted by
-// the process receiving a signal. This is expected to initiate server
-// shutdown and is handled by returning immediately from this function.
 
 
 int server_join_ready(server_t *server) {
     return server->join_ready;
 }
-// Return the join_ready flag from the server which indicates whether
-// a call to server_handle_join() is safe.
+
 
 void server_handle_join(server_t *server) {
     if (!server_join_ready(server)) {
@@ -225,14 +224,12 @@ void server_handle_join(server_t *server) {
 
     return;
 }
-// Call this function only if server_join_ready() returns true. Read a
-// join request and add the new client to the server. After finishing,
-// set the servers join_ready flag to 0.
 
 
 int server_client_ready(server_t *server, int idx) {
     return server_get_client(server,idx)->data_ready;
 }
+
 
 void server_handle_client(server_t *server, int idx) {
     if (!server_client_ready) {
@@ -258,27 +255,46 @@ void server_handle_client(server_t *server, int idx) {
     }
 
     client->data_ready = 0;
+    // ADVANCED: update last_contact_time
+    client->last_contact_time = server->time_sec;
     log_printf("END: server_handle_client()\n");             // at end of function 
     return;
 }
-// ADVANCED: Update the last_contact_time of the client to the current
-// server time_sec.
 
 
 void server_tick(server_t *server) {
-    server->time_sec++;                     // this seems too easy lol?
+    server->time_sec++;
     return;
 }
-// ADVANCED: Increment the time for the server
 
 
 void server_ping_clients(server_t *server) {
+    mesg_t ping_actual;
+    mesg_t *ping = &ping_actual;
+    ping->kind = BL_PING;
+    server_broadcast(server, ping);
     return;
 }
-// ADVANCED: Ping all clients in the server by broadcasting a ping.
 
 
 void server_remove_disconnected(server_t *server, int disconnect_secs) {
+
+    for (int i = 0; i < server->n_clients; i++) {
+    	int time = server->time_sec - server->client[i].last_contact_time;
+    	if (time >= disconnect_secs) {
+    	    server_remove_client(server,i);
+    	    
+    	    // broadcast disconnect message
+    	    mesg_t disconnect_actual;
+    	    mesg_t *disconnect = &disconnect_actual;
+    	    disconnect->kind = BL_DISCONNECTED;
+    	    strncpy(disconnect->name, server->client[i].name, sizeof(server->client[i].name));
+    	    server_broadcast(server, disconnect);
+    	    
+    	    i--;
+    	}    
+    }
+
     return;
 }
 // ADVANCED: Check all clients to see if they have contacted the
@@ -291,6 +307,14 @@ void server_remove_disconnected(server_t *server, int disconnect_secs) {
 
 
 void server_write_who(server_t *server) {
+    // lock semaphore
+    
+    // complete write to log file in its own thread
+    // consider pwrite() to write to a specific location
+    // in an open file descriptor -- which won't alter
+    // the position of log_fd so that appends continue
+    // to the end of the file
+
     return;
 }
 // ADVANCED: Write the current set of clients logged into the server
@@ -305,6 +329,9 @@ void server_write_who(server_t *server) {
 
 
 void server_log_message(server_t *server, mesg_t *mesg) {
+
+    write(server->log_fd, mesg, sizeof(*mesg));			// probs needs more
+
     return;
 }
 // ADVANCED: Write the given message to the end of log file associated
