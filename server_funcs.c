@@ -26,29 +26,31 @@ void server_start(server_t *server, char *server_name, int perms) {
     check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server->server_name);
 
     // ADVANCED: create log and semaphore
-    char log_name[MAXNAME];
+    char log_name[sizeof(server_name)+5];
     strncpy(log_name, server_name, sizeof(server_name));
     strncat(log_name, ".log", 5);
     printf("%s\n", log_name);
     
-    char sem_name[MAXNAME] = "/";
+    char sem_name[MAXNAME];
+    strncpy(sem_name, "/", 2);
     strncat(sem_name, server_name, sizeof(server_name));
     strncat(sem_name, ".sem", 5);
     printf("%s\n", sem_name);
 
-    server->log_fd = open(log_name, O_CREAT | O_RDWR | O_APPEND , S_IRUSR | S_IWUSR);
+    server->log_fd = open(log_name, O_CREAT | O_RDWR , S_IRUSR | S_IWUSR);
     check_fail(server->log_fd==-1, 1, "Couldn't open file %s", log_name);
     server->log_sem = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
-    sem_init(server->log_sem, 1, 1);
+    
+    sem_init(&server->log_sem, 1, 1);
 
-    // create initial who_t structure
+    sem_wait(&server->log_sem);
+
     who_t who;
-    //who.n_clients = server->n_clients;
-    who.n_clients = 1;
-    strcpy(who.names[0], "red");
-
-    // write who_t to the log file
+    who.n_clients = server->n_clients;
+    lseek(server->log_fd, 0, SEEK_END);
     write(server->log_fd, &who, sizeof(who));
+    
+    sem_post(&server->log_sem);
 
     log_printf("END: server_start()\n");                // at end of function
     return;
@@ -69,8 +71,6 @@ void server_shutdown(server_t *server) {
     fd = close(server->log_fd);
     check_fail(fd==-1, 1, "Couldn't close file %s", server->log_fd);
 
-    sem_close(server->log_sem);
-
     // send a BL_SHUTDOWN message to all clients
     mesg_t shutdown_actual;
     mesg_t *shutdown = &shutdown_actual;
@@ -81,6 +81,8 @@ void server_shutdown(server_t *server) {
     for (int i = server->n_clients-1; i >= 0; i--) {
         server_remove_client(server,i);
     }
+    
+    sem_close(server->log_sem);
 
     log_printf("END: server_shutdown()\n");
     return;
@@ -149,13 +151,13 @@ void server_broadcast(server_t *server, mesg_t *mesg) {
     
     if (mesg->kind != BL_PING) {
         //open sem
-        sem_wait(server->log_sem);
+        sem_wait(&server->log_sem);
     	
         //write in log
         write(server->log_fd, mesg, sizeof(*mesg));
 
     	//close sem
-        sem_post(server->log_sem);
+        sem_post(&server->log_sem);
     }
     
     for (int i = 0; i < server->n_clients; i++) {
