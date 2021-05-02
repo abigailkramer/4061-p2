@@ -49,22 +49,22 @@ void *server_worker(void *arg) {
         mesg_t message;// = &message_actual;
         int nread = read(client->to_client_fd, &message, sizeof(message));
         
-        if (nread != sizeof(*message)) {
+        if (nread != sizeof(message)) {
             continue;
         }
 
-        if (message->kind == BL_SHUTDOWN) {
+        if (message.kind == BL_SHUTDOWN) {
             break;
         }
-        if (message->kind == BL_MESG) {
-            iprintf(simpio, "[%s] : %s\n", message->name, message->body);
-        } else if (message->kind == BL_JOINED) {
-            iprintf(simpio, "-- %s JOINED --\n", message->name);
-        } else if (message->kind == BL_DEPARTED) {
-            iprintf(simpio, "-- %s DEPARTED --\n", message->name);
-        } else if (message->kind == BL_DISCONNECTED) {
-            iprintf(simpio, "-- %s DISCONNECTED --\n", message->name);
-        } else if (message->kind == BL_PING) {
+        if (message.kind == BL_MESG) {
+            iprintf(simpio, "[%s] : %s\n", message.name, message.body);
+        } else if (message.kind == BL_JOINED) {
+            iprintf(simpio, "-- %s JOINED --\n", message.name);
+        } else if (message.kind == BL_DEPARTED) {
+            iprintf(simpio, "-- %s DEPARTED --\n", message.name);
+        } else if (message.kind == BL_DISCONNECTED) {
+            iprintf(simpio, "-- %s DISCONNECTED --\n", message.name);
+        } else if (message.kind == BL_PING) {
             // respond w/ ping back
             //mesg_t ping_response_actual;
             mesg_t ping_response;// = &ping_response_actual;
