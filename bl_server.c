@@ -41,8 +41,8 @@ int main(int argc, char *argv[]) {
     sigaction(SIGINT, &my_sa, NULL);
 
     // set alarm handler for SIGALRM
-    signal(SIGALRM, alarm_handler);
-    alarm(1);
+    //signal(SIGALRM, alarm_handler);
+    //alarm(1);
 
     server_t server_actual;
     server_t *server = &server_actual;
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
         
         // ADVANCED
         // maybe? or just DO_ADVANCED?
-        if (DO_ADVANCED && SECOND_PASSED) {
+        if (DO_ADVANCED) { // && SECOND_PASSED
             log_printf("executing advanced\n");
             server_tick(server);
             server_ping_clients(server);

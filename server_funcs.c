@@ -143,9 +143,14 @@ void server_broadcast(server_t *server, mesg_t *mesg) {
     dbg_printf("server_broadcast()\n");
     
     if (mesg->kind != BL_PING) {
-    	//open sem
-    	//write in log
+        //open sem
+        sem_wait(server->log_sem);
+    	
+        //write in log
+        write(server->log_fd, &mesg, sizeof(mesg));
+
     	//close sem
+        sem_post(server->log_sem);
     }
     
     for (int i = 0; i < server->n_clients; i++) {
