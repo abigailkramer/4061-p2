@@ -66,10 +66,11 @@ void server_shutdown(server_t *server) {
     check_fail(fd==-1, 1, "Couldn't close file %s", server->log_fd);
 
     // send a BL_SHUTDOWN message to all clients
-    mesg_t shutdown_actual;
-    mesg_t *shutdown = &shutdown_actual;
-    shutdown->kind = BL_SHUTDOWN;
-    server_broadcast(server, shutdown);
+    //mesg_t shutdown_actual;
+    //mesg_t *shutdown = &shutdown_actual;
+    mesg_t shutdown;
+    shutdown.kind = BL_SHUTDOWN;
+    server_broadcast(server, &shutdown);
 
     // proceed to remove all clients in any order
     for (int i = server->n_clients-1; i >= 0; i--) {
@@ -106,11 +107,11 @@ int server_add_client(server_t *server, join_t *join) {
     
     server->n_clients++;    
         
-    mesg_t message_actual;
-    mesg_t *join_mesg = &message_actual;
-    join_mesg->kind = BL_JOINED;
-    strncpy(join_mesg->name, server->client[n].name, sizeof(server->client[n].name));
-    server_broadcast(server, join_mesg);        
+    //mesg_t message_actual;
+    mesg_t join_mesg;// = &message_actual;
+    join_mesg.kind = BL_JOINED;
+    strncpy(join_mesg.name, server->client[n].name, sizeof(server->client[n].name));
+    server_broadcast(server, &join_mesg);
 
     log_printf("END: server_add_client()\n");           // at end of function
     return 0;
@@ -212,13 +213,13 @@ void server_handle_join(server_t *server) {
 
     log_printf("BEGIN: server_handle_join()\n");               // at beginnning of function
 
-    join_t join_actual;
-    join_t *join = &join_actual;
+    //join_t join_actual;
+    join_t join;// = &join_actual;
     
-    read(server->join_fd, join, sizeof(*join));
-    log_printf("join request for new client '%s'\n", join->name);      // reports name of new client
+    read(server->join_fd, &join, sizeof(join));
+    log_printf("join request for new client '%s'\n", join.name);      // reports name of new client
     
-    server_add_client(server, join);
+    server_add_client(server, &join);
 
     server->join_ready = 0;
     log_printf("END: server_handle_join()\n");                 // at end of function
@@ -239,20 +240,20 @@ void server_handle_client(server_t *server, int idx) {
     log_printf("BEGIN: server_handle_client()\n");           // at beginning of function
 
     // read mesg from to_server_fd
-    mesg_t message_actual;
-    mesg_t *mesg = &message_actual;
+    //mesg_t message_actual;
+    mesg_t mesg;// = &message_actual;
 
     client_t *client = server_get_client(server, idx);
-    read(client->to_server_fd, mesg, sizeof(*mesg));
+    read(client->to_server_fd, &mesg, sizeof(mesg));
 
     // analyze message kind
-    if (mesg->kind == BL_MESG) {
-        log_printf("client %d '%s' MESSAGE '%s'\n",idx,mesg->name,mesg->body); // indicates client message
-        server_broadcast(server, mesg);
-    } else if (mesg->kind == BL_DEPARTED) {
+    if (mesg.kind == BL_MESG) {
+        log_printf("client %d '%s' MESSAGE '%s'\n",idx,mesg.name,mesg.body); // indicates client message
+        server_broadcast(server, &mesg);
+    } else if (mesg.kind == BL_DEPARTED) {
     	server_remove_client(server,idx);
-        log_printf("client %d '%s' DEPARTED\n",idx,mesg->name);     // indicates client departed
-        server_broadcast(server, mesg);
+        log_printf("client %d '%s' DEPARTED\n",idx,mesg.name);     // indicates client departed
+        server_broadcast(server, &mesg);
     }
 
     client->data_ready = 0;
@@ -271,9 +272,9 @@ void server_tick(server_t *server) {
 
 void server_ping_clients(server_t *server) {
     mesg_t ping_actual;
-    mesg_t *ping = &ping_actual;
-    ping->kind = BL_PING;
-    server_broadcast(server, ping);
+    mesg_t ping;// = &ping_actual;
+    ping.kind = BL_PING;
+    server_broadcast(server, &ping);
     return;
 }
 
@@ -286,11 +287,11 @@ void server_remove_disconnected(server_t *server, int disconnect_secs) {
     	    server_remove_client(server,i);
     	    
     	    // broadcast disconnect message
-    	    mesg_t disconnect_actual;
-    	    mesg_t *disconnect = &disconnect_actual;
-    	    disconnect->kind = BL_DISCONNECTED;
-    	    strncpy(disconnect->name, server->client[i].name, sizeof(server->client[i].name));
-    	    server_broadcast(server, disconnect);
+    	    //mesg_t disconnect_actual;
+    	    mesg_t disconnect;// = &disconnect_actual;
+    	    disconnect.kind = BL_DISCONNECTED;
+    	    strncpy(disconnect.name, server->client[i].name, sizeof(server->client[i].name));
+    	    server_broadcast(server, &disconnect);
     	    
     	    i--;
     	}    
@@ -331,7 +332,7 @@ void server_write_who(server_t *server) {
 
 void server_log_message(server_t *server, mesg_t *mesg) {
 
-    write(server->log_fd, mesg, sizeof(*mesg));			// probs needs more
+    write(server->log_fd, &mesg, sizeof(mesg));			// probs needs more
 
     return;
 }
