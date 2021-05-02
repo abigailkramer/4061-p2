@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 
     server_t server_actual;
     server_t *server = &server_actual;
-    server_start(server, server_name, O_RDWR);
+    server_start(server, server_name, DEFAULT_PERMS);
 
     while(!SHUTDOWN) {
         server_check_sources(server);

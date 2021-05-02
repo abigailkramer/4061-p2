@@ -21,7 +21,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     server->join_ready = 0;
 
     remove(server->server_name);
-    mkfifo(server->server_name, 0666);
+    mkfifo(server->server_name, perms);     // using DEFAULT_PERMS from blather.h
     server->join_fd = open(server->server_name, perms);
     check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server->server_name);
 
@@ -29,13 +29,11 @@ void server_start(server_t *server, char *server_name, int perms) {
     char log_name[sizeof(server_name)+5];
     strncpy(log_name, server_name, sizeof(server_name));
     strncat(log_name, ".log", 5);
-    printf("%s\n", log_name);
     
     char sem_name[MAXNAME];
     strncpy(sem_name, "/", 2);
     strncat(sem_name, server_name, sizeof(server_name));
     strncat(sem_name, ".sem", 5);
-    printf("%s\n", sem_name);
 
     server->log_fd = open(log_name, O_CREAT | O_RDWR , S_IRUSR | S_IWUSR);
     check_fail(server->log_fd==-1, 1, "Couldn't open file %s", log_name);
@@ -150,14 +148,8 @@ void server_broadcast(server_t *server, mesg_t *mesg) {
     dbg_printf("server_broadcast()\n");
     
     if (mesg->kind != BL_PING) {
-        //open sem
-        sem_wait(&server->log_sem);
-    	
-        //write in log
+        //write in log -- semaphore is for who_t part of log file
         write(server->log_fd, mesg, sizeof(*mesg));
-
-    	//close sem
-        sem_post(&server->log_sem);
     }
     
     for (int i = 0; i < server->n_clients; i++) {
