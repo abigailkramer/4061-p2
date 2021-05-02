@@ -16,35 +16,14 @@ void server_start(server_t *server, char *server_name, int perms) {
     log_printf("BEGIN: server_start()\n");              // at beginning of function
 
     strncpy(server->server_name, server_name, sizeof(server_name));
-    strncat(server->server_name, ".fifo", 6);
     server->n_clients = 0;
     server->join_ready = 0;
 
-    remove(server->server_name);
-    mkfifo(server->server_name, 0666);
-    server->join_fd = open(server->server_name, perms);
-    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server->server_name);
-
-    // ADVANCED: create log and semaphore
-    char log_name[MAXNAME];
-    strncpy(log_name, server_name, sizeof(server_name));
-    strncat(log_name, ".log", 5);
+    remove(server_name);
+    mkfifo(server_name, 0666);
     
-    char sem_name[MAXNAME] = "/";
-    strncat(sem_name, server_name, sizeof(server_name));
-    strncat(sem_name, ".sem", 5);
-
-    server->log_fd = open(log_name, O_CREAT | O_RDWR | O_APPEND , S_IRUSR | S_IWUSR);
-    check_fail(server->log_fd==-1, 1, "Couldn't open file %s", log_name);
-    server->log_sem = sem_open(sem_name, O_CREAT, S_IRUSR | S_IWUSR);
-    sem_init(server->log_sem, 1, 1);
-
-    // create initial who_t structure
-    who_t who;
-    who.n_clients = server->n_clients;
-
-    // write who_t to the log file
-    write(server->log_fd, &who, sizeof(who));
+    server->join_fd = open(server_name, perms);
+    check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server_name);    
 
     log_printf("END: server_start()\n");                // at end of function
     return;
@@ -61,16 +40,13 @@ void server_shutdown(server_t *server) {
     int fd = close(server->join_fd);
     check_fail(fd==-1, 1, "Couldn't close file %s", server->join_fd);
     remove(server->server_name);
-    
-    fd = close(server->log_fd);
-    check_fail(fd==-1, 1, "Couldn't close file %s", server->log_fd);
+    unlink(server->server_name);
 
     // send a BL_SHUTDOWN message to all clients
-    //mesg_t shutdown_actual;
-    //mesg_t *shutdown = &shutdown_actual;
-    mesg_t shutdown;
-    shutdown.kind = BL_SHUTDOWN;
-    server_broadcast(server, &shutdown);
+    mesg_t shutdown_actual;
+    mesg_t *shutdown = &shutdown_actual;
+    shutdown->kind = BL_SHUTDOWN;
+    server_broadcast(server, shutdown);
 
     // proceed to remove all clients in any order
     for (int i = server->n_clients-1; i >= 0; i--) {
@@ -107,11 +83,11 @@ int server_add_client(server_t *server, join_t *join) {
     
     server->n_clients++;    
         
-    //mesg_t message_actual;
-    mesg_t join_mesg;// = &message_actual;
-    join_mesg.kind = BL_JOINED;
-    strncpy(join_mesg.name, server->client[n].name, sizeof(server->client[n].name));
-    server_broadcast(server, &join_mesg);
+    mesg_t message_actual;
+    mesg_t *join_mesg = &message_actual;
+    join_mesg->kind = BL_JOINED;
+    strncpy(join_mesg->name, server->client[n].name, sizeof(server->client[n].name));
+    server_broadcast(server, join_mesg);        
 
     log_printf("END: server_add_client()\n");           // at end of function
     return 0;
@@ -129,6 +105,8 @@ int server_remove_client(server_t *server, int idx) {
     close(client->to_server_fd);
     remove(client->to_client_fname);
     remove(client->to_server_fname);
+    unlink(client->to_client_fname);
+    unlink(client->to_server_fname);
     
     for (int i = idx+1; i < server->n_clients; i++) {
         server->client[i-1] = server->client[i];
@@ -141,15 +119,8 @@ int server_remove_client(server_t *server, int idx) {
 
 void server_broadcast(server_t *server, mesg_t *mesg) {
     dbg_printf("server_broadcast()\n");
-    
-    if (mesg->kind != BL_PING) {
-    	//open sem
-    	//write in log
-    	//close sem
-    }
-    
     for (int i = 0; i < server->n_clients; i++) {
-        write(server->client[i].to_client_fd, &mesg, sizeof(mesg));
+        write(server->client[i].to_client_fd, mesg, sizeof(*mesg));
     }
     dbg_printf("end server_broadcast()\n");
     return;
@@ -168,6 +139,7 @@ void server_check_sources(server_t *server) {
     }
     pfds[sources-1].fd = server->join_fd;
     pfds[sources-1].events = POLLIN;
+
 
     log_printf("poll()'ing to check %d input sources\n", sources);  // prior to poll() call
 
@@ -195,16 +167,27 @@ void server_check_sources(server_t *server) {
         server_handle_join(server);
     }
     
+
     log_printf("END: server_check_sources()\n");               // at end of function
     dbg_printf("Finished checking sources\n");
     return;
 }
+// Checks all sources of data for the server to determine if any are
+// ready for reading. Sets the servers join_ready flag and the
+// data_ready flags of each of client if data is ready for them.
+// Makes use of the poll() system call to efficiently determine which
+// sources are ready.
+// 
+// NOTE: the poll() system call will return -1 if it is interrupted by
+// the process receiving a signal. This is expected to initiate server
+// shutdown and is handled by returning immediately from this function.
 
 
 int server_join_ready(server_t *server) {
     return server->join_ready;
 }
-
+// Return the join_ready flag from the server which indicates whether
+// a call to server_handle_join() is safe.
 
 void server_handle_join(server_t *server) {
     if (!server_join_ready(server)) {
@@ -213,25 +196,27 @@ void server_handle_join(server_t *server) {
 
     log_printf("BEGIN: server_handle_join()\n");               // at beginnning of function
 
-    //join_t join_actual;
-    join_t join;// = &join_actual;
+    join_t join_actual;
+    join_t *join = &join_actual;
     
-    read(server->join_fd, &join, sizeof(join));
-    log_printf("join request for new client '%s'\n", join.name);      // reports name of new client
+    read(server->join_fd, join, sizeof(*join));
+    log_printf("join request for new client '%s'\n", join->name);      // reports name of new client
     
-    server_add_client(server, &join);
+    server_add_client(server, join);
 
     server->join_ready = 0;
     log_printf("END: server_handle_join()\n");                 // at end of function
 
     return;
 }
+// Call this function only if server_join_ready() returns true. Read a
+// join request and add the new client to the server. After finishing,
+// set the servers join_ready flag to 0.
 
 
 int server_client_ready(server_t *server, int idx) {
     return server_get_client(server,idx)->data_ready;
 }
-
 
 void server_handle_client(server_t *server, int idx) {
     if (!server_client_ready) {
@@ -240,63 +225,44 @@ void server_handle_client(server_t *server, int idx) {
     log_printf("BEGIN: server_handle_client()\n");           // at beginning of function
 
     // read mesg from to_server_fd
-    //mesg_t message_actual;
-    mesg_t mesg;// = &message_actual;
+    mesg_t message_actual;
+    mesg_t *mesg = &message_actual;
 
     client_t *client = server_get_client(server, idx);
-    read(client->to_server_fd, &mesg, sizeof(mesg));
+    read(client->to_server_fd, mesg, sizeof(*mesg));
 
     // analyze message kind
-    if (mesg.kind == BL_MESG) {
-        log_printf("client %d '%s' MESSAGE '%s'\n",idx,mesg.name,mesg.body); // indicates client message
-        server_broadcast(server, &mesg);
-    } else if (mesg.kind == BL_DEPARTED) {
+    if (mesg->kind == BL_MESG) {
+        log_printf("client %d '%s' MESSAGE '%s'\n",idx,mesg->name,mesg->body); // indicates client message
+        server_broadcast(server, mesg);
+    } else if (mesg->kind == BL_DEPARTED) {
     	server_remove_client(server,idx);
-        log_printf("client %d '%s' DEPARTED\n",idx,mesg.name);     // indicates client departed
-        server_broadcast(server, &mesg);
+        log_printf("client %d '%s' DEPARTED\n",idx,mesg->name);     // indicates client departed
+        server_broadcast(server, mesg);
     }
 
     client->data_ready = 0;
-    // ADVANCED: update last_contact_time
-    client->last_contact_time = server->time_sec;
     log_printf("END: server_handle_client()\n");             // at end of function 
     return;
 }
+// ADVANCED: Update the last_contact_time of the client to the current
+// server time_sec.
 
 
 void server_tick(server_t *server) {
-    server->time_sec++;
+    server->time_sec++;                     // this seems too easy lol?
     return;
 }
+// ADVANCED: Increment the time for the server
 
 
 void server_ping_clients(server_t *server) {
-    mesg_t ping_actual;
-    mesg_t ping;// = &ping_actual;
-    ping.kind = BL_PING;
-    server_broadcast(server, &ping);
     return;
 }
+// ADVANCED: Ping all clients in the server by broadcasting a ping.
 
 
 void server_remove_disconnected(server_t *server, int disconnect_secs) {
-
-    for (int i = 0; i < server->n_clients; i++) {
-    	int time = server->time_sec - server->client[i].last_contact_time;
-    	if (time >= disconnect_secs) {
-    	    server_remove_client(server,i);
-    	    
-    	    // broadcast disconnect message
-    	    //mesg_t disconnect_actual;
-    	    mesg_t disconnect;// = &disconnect_actual;
-    	    disconnect.kind = BL_DISCONNECTED;
-    	    strncpy(disconnect.name, server->client[i].name, sizeof(server->client[i].name));
-    	    server_broadcast(server, &disconnect);
-    	    
-    	    i--;
-    	}    
-    }
-
     return;
 }
 // ADVANCED: Check all clients to see if they have contacted the
@@ -309,14 +275,6 @@ void server_remove_disconnected(server_t *server, int disconnect_secs) {
 
 
 void server_write_who(server_t *server) {
-    // lock semaphore
-    
-    // complete write to log file in its own thread
-    // consider pwrite() to write to a specific location
-    // in an open file descriptor -- which won't alter
-    // the position of log_fd so that appends continue
-    // to the end of the file
-
     return;
 }
 // ADVANCED: Write the current set of clients logged into the server
@@ -331,9 +289,6 @@ void server_write_who(server_t *server) {
 
 
 void server_log_message(server_t *server, mesg_t *mesg) {
-
-    write(server->log_fd, &mesg, sizeof(mesg));			// probs needs more
-
     return;
 }
 // ADVANCED: Write the given message to the end of log file associated
