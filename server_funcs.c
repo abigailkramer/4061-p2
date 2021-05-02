@@ -41,7 +41,9 @@ void server_start(server_t *server, char *server_name, int perms) {
 
     // create initial who_t structure
     who_t who;
-    who.n_clients = server->n_clients;
+    //who.n_clients = server->n_clients;
+    who.n_clients = 1;
+    strcpy(who.names[0], "red");
 
     // write who_t to the log file
     write(server->log_fd, &who, sizeof(who));
