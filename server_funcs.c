@@ -147,7 +147,7 @@ void server_broadcast(server_t *server, mesg_t *mesg) {
         sem_wait(server->log_sem);
     	
         //write in log
-        write(server->log_fd, &mesg, sizeof(mesg));
+        write(server->log_fd, mesg, sizeof(mesg));
 
     	//close sem
         sem_post(server->log_sem);

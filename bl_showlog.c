@@ -30,6 +30,7 @@ int main (int argc, char *argv[]) {
     // read through the mesg_t structs until the end of the file
     printf("MESSAGES\n");
     while(1) {
+        //mesg_t message_actual;
         mesg_t message;
         int nread = read(fd, &message, sizeof(message));
 
