@@ -54,6 +54,7 @@ int main(int argc, char *argv[]) {
         // ADVANCED
         // maybe? or just DO_ADVANCED?
         if (DO_ADVANCED && SECOND_PASSED) {
+            log_printf("executing advanced\n");
             server_tick(server);
             server_ping_clients(server);
             server_remove_disconnected(server, 10);	// 10 is placeholder disconnect_secs    

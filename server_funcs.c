@@ -65,6 +65,7 @@ void server_shutdown(server_t *server) {
     fd = close(server->log_fd);
     check_fail(fd==-1, 1, "Couldn't close file %s", server->log_fd);
 
+
     // send a BL_SHUTDOWN message to all clients
     mesg_t shutdown_actual;
     mesg_t *shutdown = &shutdown_actual;
