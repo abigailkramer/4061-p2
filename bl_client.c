@@ -120,7 +120,6 @@ int main(int argc, char *argv[]) {
     
     write(fd, join, sizeof(*join));
     close(fd);    // client won't need join_fd anymore
-    unlink(server_name);
 
     char prompt[MAXNAME+3];
     snprintf(prompt, MAXNAME+3, "%s>> ",client_name); // create a prompt string
