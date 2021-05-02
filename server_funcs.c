@@ -149,7 +149,7 @@ void server_broadcast(server_t *server, mesg_t *mesg) {
     }
     
     for (int i = 0; i < server->n_clients; i++) {
-        write(server->client[i].to_client_fd, mesg, sizeof(*mesg));
+        write(server->client[i].to_client_fd, &mesg, sizeof(mesg));
     }
     dbg_printf("end server_broadcast()\n");
     return;

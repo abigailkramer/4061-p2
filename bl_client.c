@@ -20,24 +20,24 @@ void *client_worker(void *arg) {
         }
         if (simpio->line_ready) {
             // format message
-            mesg_t usr_mesg_actual;
-            mesg_t *usr_mesg = &usr_mesg_actual;
-            strncpy(usr_mesg->name, client->name, sizeof(client->name));
-            strncpy(usr_mesg->body, simpio->buf, sizeof(simpio->buf));
-            usr_mesg->kind = BL_MESG;
+            //mesg_t usr_mesg_actual;
+            mesg_t usr_mesg;// = &usr_mesg_actual;
+            strncpy(usr_mesg.name, client->name, sizeof(client->name));
+            strncpy(usr_mesg.body, simpio->buf, sizeof(simpio->buf));
+            usr_mesg.kind = BL_MESG;
             
             // write to the to-server fifo
-            write(client->to_server_fd, usr_mesg, sizeof(*usr_mesg));
+            write(client->to_server_fd, &usr_mesg, sizeof(usr_mesg));
         }
     }
     iprintf(simpio, "End of Input, Departing\n");
     
     // write departed message to server
-    mesg_t depart_mesg_actual;
-    mesg_t *depart_mesg = &depart_mesg_actual;
-    strncpy(depart_mesg->name, client->name, sizeof(client->name));
-    depart_mesg->kind = BL_DEPARTED;
-    write(client->to_server_fd, depart_mesg, sizeof(*depart_mesg));
+    //mesg_t depart_mesg_actual;
+    mesg_t depart_mesg;// = &depart_mesg_actual;
+    strncpy(depart_mesg.name, client->name, sizeof(client->name));
+    depart_mesg.kind = BL_DEPARTED;
+    write(client->to_server_fd, &depart_mesg, sizeof(depart_mesg));
     
     pthread_cancel(server_thread); // kill the server thread
     return NULL;
@@ -45,9 +45,9 @@ void *client_worker(void *arg) {
 
 void *server_worker(void *arg) {
     while(1) {
-        mesg_t message_actual;
-        mesg_t *message = &message_actual;
-        int nread = read(client->to_client_fd, message, sizeof(*message));
+        //mesg_t message_actual;
+        mesg_t message;// = &message_actual;
+        int nread = read(client->to_client_fd, &message, sizeof(message));
         
         if (nread != sizeof(*message)) {
             continue;
@@ -66,12 +66,12 @@ void *server_worker(void *arg) {
             iprintf(simpio, "-- %s DISCONNECTED --\n", message->name);
         } else if (message->kind == BL_PING) {
             // respond w/ ping back
-            mesg_t ping_response_actual;
-            mesg_t *ping_response = &ping_response_actual;
-            ping_response->kind = BL_PING;
+            //mesg_t ping_response_actual;
+            mesg_t ping_response;// = &ping_response_actual;
+            ping_response.kind = BL_PING;
             
             // write to the to-server fifo
-            write(client->to_server_fd, ping_response, sizeof(*ping_response));        
+            write(client->to_server_fd, &ping_response, sizeof(ping_response));
     	}
     }
     iprintf(simpio, "!!! server is shutting down !!!\n");
@@ -109,16 +109,16 @@ int main(int argc, char *argv[]) {
     check_fail(client->to_server_fd==-1, 1, "Couldn't open file %s", client->to_server_fname);    
     
     // write join request to server fifo
-    join_t join_actual;
-    join_t *join = &join_actual;
-    strncpy(join->name, client->name, sizeof(client->name));
-    strncpy(join->to_client_fname, client->to_client_fname, sizeof(client->to_client_fname));
-    strncpy(join->to_server_fname, client->to_server_fname, sizeof(client->to_server_fname));
+    //join_t join_actual;
+    join_t join;// = &join_actual;
+    strncpy(join.name, client->name, sizeof(client->name));
+    strncpy(join.to_client_fname, client->to_client_fname, sizeof(client->to_client_fname));
+    strncpy(join.to_server_fname, client->to_server_fname, sizeof(client->to_server_fname));
 
     int fd = open(server_name, O_WRONLY);
     check_fail(fd==-1, 1, "Couldn't open file %s", server_name);
     
-    write(fd, join, sizeof(*join));
+    write(fd, &join, sizeof(join));
     close(fd);    // client won't need join_fd anymore
     unlink(server_name);
 
