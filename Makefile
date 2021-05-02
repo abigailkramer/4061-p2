@@ -14,6 +14,6 @@ bl_showlog : bl_showlog.c
 	$(CC) -o $@ $^ util.c -lpthread
 
 clean: 
-	rm -f bl_server bl_client bl_showlog *.fifo
+	rm -f bl_server bl_client bl_showlog *.fifo *.log
 
 #include test_Makefile

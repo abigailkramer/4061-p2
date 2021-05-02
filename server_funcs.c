@@ -149,6 +149,7 @@ void server_broadcast(server_t *server, mesg_t *mesg) {
     
     if (mesg->kind != BL_PING) {
         //write in log -- semaphore is for who_t part of log file
+        lseek(server->log_fd, 0, SEEK_END);
         write(server->log_fd, mesg, sizeof(*mesg));
     }
     

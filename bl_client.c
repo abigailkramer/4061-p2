@@ -11,6 +11,45 @@ simpio_t *simpio = &simpio_actual;
 client_t client_actual;
 client_t *client = &client_actual;
 
+char server_name[MAXNAME];
+
+
+void message_reader(int num_mesg) {
+
+  char log_name[MAXNAME];
+  strncpy(log_name, server_name, sizeof(server_name));
+  strncat(log_name, ".log", 5);
+  
+  int fd = open(log_name, O_CREAT | O_RDWR , S_IRUSR | S_IWUSR);
+  check_fail(fd==-1, 1, "Couldn't open file %s", log_name);
+  
+  iprintf(simpio,"====================\n");
+  iprintf(simpio, "LAST %d MESSAGES\n", num_mesg);
+  
+  mesg_t message_actual;
+  mesg_t *message = &message_actual;
+  
+  lseek(fd, -(num_mesg*sizeof(*message)), SEEK_END);
+  for (int i = 0; i < num_mesg; i++) {
+
+    int nread = read(fd, message, sizeof(*message));
+    
+    if (message->kind == BL_MESG) {
+      iprintf(simpio, "[%s] : %s\n", message->name, message->body);
+    } else if (message->kind == BL_JOINED) {
+      iprintf(simpio, "-- %s JOINED --\n", message->name);
+    } else if (message->kind == BL_DEPARTED) {
+      iprintf(simpio, "-- %s DEPARTED --\n", message->name);
+    } else if (message->kind == BL_DISCONNECTED) {
+            iprintf(simpio, "-- %s DISCONNECTED --\n", message->name);
+    }
+    
+  }
+  
+  iprintf(simpio,"====================\n");
+  return;
+}
+
 void *client_worker(void *arg) {    
     while (!simpio->end_of_input) {
         simpio_reset(simpio);
@@ -19,6 +58,17 @@ void *client_worker(void *arg) {
             simpio_get_char(simpio);
         }
         if (simpio->line_ready) {
+        
+          int check = strncmp(simpio->buf, "%last", 5);
+            
+          if (check == 0) {
+            
+            int num_mesg;
+            int nread = sscanf(simpio->buf+5, "%d", &num_mesg);  // skip "%last and read int
+            message_reader(num_mesg);
+            
+          } else {
+          
             // format message
             mesg_t usr_mesg_actual;
             mesg_t *usr_mesg = &usr_mesg_actual;
@@ -26,8 +76,11 @@ void *client_worker(void *arg) {
             strncpy(usr_mesg->body, simpio->buf, sizeof(simpio->buf));
             usr_mesg->kind = BL_MESG;
             
+            
             // write to the to-server fifo
             write(client->to_server_fd, usr_mesg, sizeof(*usr_mesg));
+          }
+            
         }
     }
     iprintf(simpio, "End of Input, Departing\n");
@@ -87,9 +140,12 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    char server_name[MAXNAME];
+    //char server_name[MAXNAME];
     strncpy(server_name, argv[1], sizeof(argv[1]));
-    strcat(server_name, ".fifo");
+    
+    char join_name[MAXNAME];
+    strncpy(join_name, server_name, sizeof(server_name));
+    strcat(join_name, ".fifo");
     char client_name[MAXNAME];
     strncpy(client_name, argv[2], sizeof(argv[2]));
 
@@ -99,8 +155,8 @@ int main(int argc, char *argv[]) {
     sprintf(client->to_server_fname, "%d_to_server.fifo", getpid());
 
     // create to server and to client fifos
-    mkfifo(client->to_client_fname, 0666);
-    mkfifo(client->to_server_fname, 0666);
+    mkfifo(client->to_client_fname, DEFAULT_PERMS);
+    mkfifo(client->to_server_fname, DEFAULT_PERMS);
 
     client->to_client_fd = open(client->to_client_fname, O_RDWR);
     check_fail(client->to_client_fd==-1, 1, "Couldn't open file %s", client->to_client_fname);
@@ -115,8 +171,8 @@ int main(int argc, char *argv[]) {
     strncpy(join->to_client_fname, client->to_client_fname, sizeof(client->to_client_fname));
     strncpy(join->to_server_fname, client->to_server_fname, sizeof(client->to_server_fname));
 
-    int fd = open(server_name, O_WRONLY);
-    check_fail(fd==-1, 1, "Couldn't open file %s", server_name);
+    int fd = open(join_name, O_WRONLY);
+    check_fail(fd==-1, 1, "Couldn't open file %s", join_name);
     
     write(fd, join, sizeof(*join));
     close(fd);    // client won't need join_fd anymore
