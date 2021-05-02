@@ -65,6 +65,7 @@ void server_shutdown(server_t *server) {
     fd = close(server->log_fd);
     check_fail(fd==-1, 1, "Couldn't close file %s", server->log_fd);
 
+    sem_close(server->log_sem);
 
     // send a BL_SHUTDOWN message to all clients
     mesg_t shutdown_actual;
@@ -147,7 +148,8 @@ void server_broadcast(server_t *server, mesg_t *mesg) {
         sem_wait(server->log_sem);
     	
         //write in log
-        write(server->log_fd, mesg, sizeof(mesg));
+        mesg_t message = &mesg;
+        write(server->log_fd, &message, sizeof(message));
 
     	//close sem
         sem_post(server->log_sem);

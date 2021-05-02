@@ -14,6 +14,7 @@ int main (int argc, char *argv[]) {
     char log_name[MAXNAME];
     strncpy(log_name, argv[1], sizeof(argv[1]));
     strncat(log_name, ".log", 5);
+    printf("%s\n",log_name);
 
     // open log
     int fd = open(log_name, O_RDONLY);
