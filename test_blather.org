@@ -1,6 +1,5 @@
 #+TESTY: PREFIX=blather
 #+TESTY: PROGRAM='TESTY_MULTI'
-#+TESTY: VALGRIND_OPTS="--suppressions=test_valg_suppress_leak.conf"
 #+TESTY: USE_VALGRIND=1
 #+TESTY: VALGRIND_OPTS='--suppressions=test_valgrind.supp'
 #+TESTY: TIMEOUT=20s
