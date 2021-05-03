@@ -1,6 +1,0 @@
-==1537617== Memcheck, a memory error detector
-==1537617== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==1537617== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==1537617== Command: ./bl_client metropolis Clark
-==1537617== Parent PID: 1537615
-==1537617== 

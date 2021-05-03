@@ -30,8 +30,8 @@ int main(int argc, char *argv[]) {
     	DO_ADVANCED = 1;
     }
 
-    char server_name[MAXPATH];
-    strncpy(server_name, argv[1], sizeof(argv[1]));
+    //char server_name[MAXPATH];
+    //strncpy(server_name, argv[1], sizeof(argv[1]));
 
     struct sigaction my_sa = {};
     my_sa.sa_handler = shutdown_handler;
@@ -44,9 +44,9 @@ int main(int argc, char *argv[]) {
     //signal(SIGALRM, alarm_handler);
     //alarm(1);
 
-    server_t server_actual;
+    server_t server_actual = {};
     server_t *server = &server_actual;
-    server_start(server, server_name, DEFAULT_PERMS);
+    server_start(server, argv[1], DEFAULT_PERMS);
 
     while(!SHUTDOWN) {
         server_check_sources(server);

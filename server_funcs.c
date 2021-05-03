@@ -18,7 +18,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     log_printf("BEGIN: server_start()\n");              // at beginning of function
 
     strncpy(server->server_name, server_name, sizeof(server_name));
-    strncat(server->server_name, ".fifo", 6);
+    strncat(server->server_name, ".fifo", sizeof(".fifo"));
     server->n_clients = 0;
     server->join_ready = 0;
 
@@ -30,12 +30,12 @@ void server_start(server_t *server, char *server_name, int perms) {
     // ADVANCED: create log and semaphore
     char log_name[MAXPATH];
     strncpy(log_name, server_name, sizeof(server_name));
-    strncat(log_name, ".log", 5);
+    strncat(log_name, ".log", sizeof(".log"));
     
     //char sem_name[MAXNAME];
     strncpy(sem_name, "/", 2);
     strncat(sem_name, server_name, sizeof(server_name));
-    strncat(sem_name, ".sem", 5);
+    strncat(sem_name, ".sem", ".sem");
 
     server->log_fd = open(log_name, O_CREAT | O_RDWR , S_IRUSR | S_IWUSR);
     check_fail(server->log_fd==-1, 1, "Couldn't open file %s", log_name);
@@ -94,7 +94,7 @@ int server_add_client(server_t *server, join_t *join) {
     log_printf("BEGIN: server_add_client()\n");         // at beginning of function
     
     check_fail(server->n_clients >= MAXCLIENTS, 0, "Index out of bounds: %d vs max %d\n",server->n_clients,MAXCLIENTS);
-    if (server->n_clients >= MAXCLIENTS) {
+    if (server->n_clients+1 >= MAXCLIENTS) {
     	log_printf("END: server_add_client()\n");           // at end of function
     	return 1;
     }

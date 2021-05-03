@@ -5,10 +5,10 @@
 pthread_t client_thread;
 pthread_t server_thread;
 
-simpio_t simpio_actual;
+simpio_t simpio_actual = {};
 simpio_t *simpio = &simpio_actual;
 
-client_t client_actual;
+client_t client_actual = {};
 client_t *client = &client_actual;
 
 char server_name[MAXNAME];
@@ -18,7 +18,7 @@ void message_reader(int num_mesg) {
 
   char log_name[MAXNAME];
   strncpy(log_name, server_name, sizeof(server_name));
-  strncat(log_name, ".log", 5);
+  strncat(log_name, ".log", sizeof(".log"));
   
   int fd = open(log_name, O_CREAT | O_RDWR , S_IRUSR | S_IWUSR);
   check_fail(fd==-1, 1, "Couldn't open file %s", log_name);
@@ -140,17 +140,16 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    //char server_name[MAXNAME];
     strncpy(server_name, argv[1], sizeof(argv[1]));
     
     char join_name[MAXNAME];
     strncpy(join_name, server_name, sizeof(server_name));
-    strcat(join_name, ".fifo");
-    char client_name[MAXNAME];
-    strncpy(client_name, argv[2], sizeof(argv[2]));
+    strncat(join_name, ".fifo", sizeof(".fifo"));
+    //char client_name[MAXNAME];
+    //strncpy(client_name, argv[2], sizeof(argv[2]));
 
     // create to-client and to-server fifos
-    strncpy(client->name, client_name, sizeof(client_name));
+    strncpy(client->name, argv[2], sizeof(argv[2]));
     sprintf(client->to_client_fname, "%d_to_client.fifo", getpid());
     sprintf(client->to_server_fname, "%d_to_server.fifo", getpid());
 
@@ -178,7 +177,7 @@ int main(int argc, char *argv[]) {
     close(fd);    // client won't need join_fd anymore
 
     char prompt[MAXNAME+3];
-    snprintf(prompt, MAXNAME+3, "%s>> ",client_name); // create a prompt string
+    snprintf(prompt, MAXNAME+3, "%s>> ",argv[2]); // create a prompt string
     simpio_set_prompt(simpio, prompt);         // set the prompt
     simpio_reset(simpio);                      // initialize io
     simpio_noncanonical_terminal_mode();       // set the terminal into a compatible mode
