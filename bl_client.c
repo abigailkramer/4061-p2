@@ -26,7 +26,7 @@ void message_reader(int num_mesg) {
   iprintf(simpio,"====================\n");
   iprintf(simpio, "LAST %d MESSAGES\n", num_mesg);
   
-  mesg_t message_actual;
+  mesg_t message_actual = {};
   mesg_t *message = &message_actual;
   
   lseek(fd, -(num_mesg*sizeof(*message)), SEEK_END);
@@ -70,7 +70,7 @@ void *client_worker(void *arg) {
           } else {
           
             // format message
-            mesg_t usr_mesg_actual;
+            mesg_t usr_mesg_actual = {};
             mesg_t *usr_mesg = &usr_mesg_actual;
             strncpy(usr_mesg->name, client->name, sizeof(client->name));
             strncpy(usr_mesg->body, simpio->buf, sizeof(simpio->buf));
@@ -86,7 +86,7 @@ void *client_worker(void *arg) {
     iprintf(simpio, "End of Input, Departing\n");
     
     // write departed message to server
-    mesg_t depart_mesg_actual;
+    mesg_t depart_mesg_actual = {};
     mesg_t *depart_mesg = &depart_mesg_actual;
     strncpy(depart_mesg->name, client->name, sizeof(client->name));
     depart_mesg->kind = BL_DEPARTED;
@@ -98,7 +98,7 @@ void *client_worker(void *arg) {
 
 void *server_worker(void *arg) {
     while(1) {
-        mesg_t message_actual;
+        mesg_t message_actual = {};
         mesg_t *message = &message_actual;
         int nread = read(client->to_client_fd, message, sizeof(*message));
         
@@ -119,7 +119,7 @@ void *server_worker(void *arg) {
             iprintf(simpio, "-- %s DISCONNECTED --\n", message->name);
         } else if (message->kind == BL_PING) {
             // respond w/ ping back
-            mesg_t ping_response_actual;
+            mesg_t ping_response_actual = {};
             mesg_t *ping_response = &ping_response_actual;
             ping_response->kind = BL_PING;
             
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
     check_fail(client->to_server_fd==-1, 1, "Couldn't open file %s", client->to_server_fname);    
     
     // write join request to server fifo
-    join_t join_actual;
+    join_t join_actual = {};
     join_t *join = &join_actual;
     strncpy(join->name, client->name, sizeof(client->name));
     strncpy(join->to_client_fname, client->to_client_fname, sizeof(client->to_client_fname));

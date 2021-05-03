@@ -1,0 +1,28 @@
+>> START server ./bl_server gotham
+>> START bruce ./bl_client gotham Bruce
+>> INPUT bruce <EOF>
+>> SIGNAL server -15
+>> WAIT_ALL
+<testy> WAIT for server
+<testy> WAIT for bruce
+Non-zero return code 1
+>> CHECK_ALL cat
+<testy> CHECK_FAILURES for server
+<testy> CHECK_FAILURES for bruce
+>> OUTPUT_ALL ./test_filter_client_output
+
+<testy> OUTPUT for server
+LOG: BEGIN: server_start()
+LOG: END: server_start()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources
+LOG: poll() completed with return value -1
+LOG: poll() interrupted by a signal
+LOG: END: server_check_sources()
+LOG: BEGIN: server_shutdown()
+LOG: END: server_shutdown()
+
+<testy> OUTPUT for bruce
+Couldn't open file gotham.fifo: No such file or directory
+
+

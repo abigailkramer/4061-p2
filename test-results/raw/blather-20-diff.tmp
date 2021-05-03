@@ -1,0 +1,1054 @@
+TEST OUTPUT MISMATCH: Side by Side Differences shown below 
+- Expect output in: test-results/raw/blather-20-expect.tmp
+- Acutal output in: test-results/raw/blather-20-actual.tmp
+- Differing lines have a character like '|' and '<' in the middle
+
+#+BEGIN_SRC diff
+==== EXPECT ====                             ==== ACTUAL ====                          
+>> START server ./bl_server serv             >> START server ./bl_server serv
+>> START A ./bl_client serv A                >> START A ./bl_client serv A
+>> START B ./bl_client serv B                >> START B ./bl_client serv B
+>> START C ./bl_client serv C                >> START C ./bl_client serv C
+>> INPUT C 1                                 >> INPUT C 1
+>> INPUT B 2                                 >> INPUT B 2
+>> INPUT B 3                                 >> INPUT B 3
+>> INPUT A 4                                 >> INPUT A 4
+>> START D ./bl_client serv D                >> START D ./bl_client serv D
+>> START E ./bl_client serv E                >> START E ./bl_client serv E
+>> INPUT A 5                                 >> INPUT A 5
+>> INPUT D 6                                 >> INPUT D 6
+>> INPUT E 7                                 >> INPUT E 7
+>> INPUT C 8                                 >> INPUT C 8
+>> START F ./bl_client serv F                >> START F ./bl_client serv F
+>> START G ./bl_client serv G                >> START G ./bl_client serv G
+>> START H ./bl_client serv H                >> START H ./bl_client serv H
+>> INPUT A 9                                 >> INPUT A 9
+>> INPUT D 10                                >> INPUT D 10
+>> INPUT E 11                                >> INPUT E 11
+>> INPUT C 12                                >> INPUT C 12
+>> INPUT B 13                                >> INPUT B 13
+>> INPUT C <EOF>                             >> INPUT C <EOF>
+>> INPUT F 14                                >> INPUT F 14
+>> INPUT G 15                                >> INPUT G 15
+>> INPUT D 16                                >> INPUT D 16
+>> INPUT E 17                                >> INPUT E 17
+>> INPUT B 18                                >> INPUT B 18
+>> INPUT D <EOF>                             >> INPUT D <EOF>
+>> INPUT F 19                                >> INPUT F 19
+>> INPUT F 20                                >> INPUT F 20
+>> INPUT E 21                                >> INPUT E 21
+>> INPUT A 22                                >> INPUT A 22
+>> INPUT G <EOF>                             >> INPUT G <EOF>
+>> INPUT B 23                                >> INPUT B 23
+>> INPUT A <EOF>                             >> INPUT A <EOF>
+>> INPUT B <EOF>                             >> INPUT B <EOF>
+>> INPUT F 24                                >> INPUT F 24
+>> INPUT E <EOF>                             >> INPUT E <EOF>
+>> INPUT F <EOF>                             >> INPUT F <EOF>
+>> INPUT H 25                                >> INPUT H 25
+>> INPUT H <EOF>                             >> INPUT H <EOF>
+>> SIGNAL server -15                         >> SIGNAL server -15
+>> WAIT_ALL                                  >> WAIT_ALL
+<testy> WAIT for server                      <testy> WAIT for server
+<testy> WAIT for A                           <testy> WAIT for A
+<testy> WAIT for B                           <testy> WAIT for B
+<testy> WAIT for C                           <testy> WAIT for C
+<testy> WAIT for D                           <testy> WAIT for D
+<testy> WAIT for E                           <testy> WAIT for E
+<testy> WAIT for F                           <testy> WAIT for F
+<testy> WAIT for G                           <testy> WAIT for G
+<testy> WAIT for H                           <testy> WAIT for H
+>> CHECK_ALL cat                             >> CHECK_ALL cat
+<testy> CHECK_FAILURES for server            <testy> CHECK_FAILURES for server
+<testy> CHECK_FAILURES for A                 <testy> CHECK_FAILURES for A
+<testy> CHECK_FAILURES for B                 <testy> CHECK_FAILURES for B
+<testy> CHECK_FAILURES for C                 <testy> CHECK_FAILURES for C
+<testy> CHECK_FAILURES for D                 <testy> CHECK_FAILURES for D
+<testy> CHECK_FAILURES for E                 <testy> CHECK_FAILURES for E
+<testy> CHECK_FAILURES for F                 <testy> CHECK_FAILURES for F
+<testy> CHECK_FAILURES for G                 <testy> CHECK_FAILURES for G
+<testy> CHECK_FAILURES for H                 <testy> CHECK_FAILURES for H
+>> OUTPUT_ALL ./test_filter_client_output    >> OUTPUT_ALL ./test_filter_client_output
+
+<testy> OUTPUT for server                    <testy> OUTPUT for server
+LOG: BEGIN: server_start()                   LOG: BEGIN: server_start()
+LOG: END: server_start()                     LOG: END: server_start()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources     LOG: poll()'ing to check 1 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 1                          LOG: join_ready = 1
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()             LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'A'         LOG: join request for new client 'A'
+LOG: BEGIN: server_add_client()              LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                LOG: END: server_add_client()
+LOG: END: server_handle_join()               LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources     LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 1                          LOG: join_ready = 1
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()             LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'B'         LOG: join request for new client 'B'
+LOG: BEGIN: server_add_client()              LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                LOG: END: server_add_client()
+LOG: END: server_handle_join()               LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources     LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+                                           > LOG: join_ready = 0
+                                           > LOG: client 0 'A' data_ready = 0
+                                           > LOG: client 1 'B' data_ready = 1
+                                           > LOG: END: server_check_sources()
+                                           > LOG: BEGIN: server_handle_client()
+                                           > LOG: client 1 'B' MESSAGE '2'
+                                           > LOG: END: server_handle_client()
+                                           > LOG: BEGIN: server_check_sources()
+                                           > LOG: poll()'ing to check 3 input sources
+                                           > LOG: poll() completed with return value 1
+LOG: join_ready = 1                          LOG: join_ready = 1
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()             LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'C'         LOG: join request for new client 'C'
+LOG: BEGIN: server_add_client()              LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                LOG: END: server_add_client()
+LOG: END: server_handle_join()               LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources     LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0           <
+LOG: client 2 'C' data_ready = 1           <
+LOG: END: server_check_sources()           <
+LOG: BEGIN: server_handle_client()         <
+LOG: client 2 'C' MESSAGE '1'              <
+LOG: END: server_handle_client()           <
+LOG: BEGIN: server_check_sources()         <
+LOG: poll()'ing to check 4 input sources   <
+LOG: poll() completed with return value 1  <
+LOG: join_ready = 0                        <
+LOG: client 0 'A' data_ready = 0           <
+LOG: client 1 'B' data_ready = 1             LOG: client 1 'B' data_ready = 1
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 1 'B' MESSAGE '2'              | LOG: client 1 'B' MESSAGE '3'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources     LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 1           | LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0           | LOG: client 2 'C' data_ready = 1
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 1 'B' MESSAGE '3'              | LOG: client 2 'C' MESSAGE '1'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources     LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 1             LOG: client 0 'A' data_ready = 1
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'A' MESSAGE '4'                LOG: client 0 'A' MESSAGE '4'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources     LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 1                          LOG: join_ready = 1
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()             LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'D'         LOG: join request for new client 'D'
+LOG: BEGIN: server_add_client()              LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                LOG: END: server_add_client()
+LOG: END: server_handle_join()               LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 5 input sources     LOG: poll()'ing to check 5 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 1                        <
+LOG: client 0 'A' data_ready = 0           <
+LOG: client 1 'B' data_ready = 0           <
+LOG: client 2 'C' data_ready = 0           <
+LOG: client 3 'D' data_ready = 0           <
+LOG: END: server_check_sources()           <
+LOG: BEGIN: server_handle_join()           <
+LOG: join request for new client 'E'       <
+LOG: BEGIN: server_add_client()            <
+LOG: END: server_add_client()              <
+LOG: END: server_handle_join()             <
+LOG: BEGIN: server_check_sources()         <
+LOG: poll()'ing to check 6 input sources   <
+LOG: poll() completed with return value 1  <
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 1             LOG: client 0 'A' data_ready = 1
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0           <
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'A' MESSAGE '5'                LOG: client 0 'A' MESSAGE '5'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 6 input sources   | LOG: poll()'ing to check 5 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 1             LOG: client 3 'D' data_ready = 1
+LOG: client 4 'E' data_ready = 0           <
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 3 'D' MESSAGE '6'                LOG: client 3 'D' MESSAGE '6'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+                                           > LOG: poll()'ing to check 5 input sources
+                                           > LOG: poll() completed with return value 1
+                                           > LOG: join_ready = 1
+                                           > LOG: client 0 'A' data_ready = 0
+                                           > LOG: client 1 'B' data_ready = 0
+                                           > LOG: client 2 'C' data_ready = 0
+                                           > LOG: client 3 'D' data_ready = 0
+                                           > LOG: END: server_check_sources()
+                                           > LOG: BEGIN: server_handle_join()
+                                           > LOG: join request for new client 'E'
+                                           > LOG: BEGIN: server_add_client()
+                                           > LOG: END: server_add_client()
+                                           > LOG: END: server_handle_join()
+                                           > LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 6 input sources     LOG: poll()'ing to check 6 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 1             LOG: client 4 'E' data_ready = 1
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 4 'E' MESSAGE '7'                LOG: client 4 'E' MESSAGE '7'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 6 input sources     LOG: poll()'ing to check 6 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 1             LOG: client 2 'C' data_ready = 1
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 2 'C' MESSAGE '8'                LOG: client 2 'C' MESSAGE '8'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 6 input sources     LOG: poll()'ing to check 6 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 1                          LOG: join_ready = 1
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()             LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'F'         LOG: join request for new client 'F'
+LOG: BEGIN: server_add_client()              LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                LOG: END: server_add_client()
+LOG: END: server_handle_join()               LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 7 input sources     LOG: poll()'ing to check 7 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 1                          LOG: join_ready = 1
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()             LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'G'         LOG: join request for new client 'G'
+LOG: BEGIN: server_add_client()              LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                LOG: END: server_add_client()
+LOG: END: server_handle_join()               LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 8 input sources     LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 1                        | LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0           | LOG: client 0 'A' data_ready = 1
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: client 6 'G' data_ready = 0             LOG: client 6 'G' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()           | LOG: BEGIN: server_handle_client()
+LOG: join request for new client 'H'       | LOG: client 0 'A' MESSAGE '9'
+LOG: BEGIN: server_add_client()            | LOG: END: server_handle_client()
+LOG: END: server_add_client()              <
+LOG: END: server_handle_join()             <
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 9 input sources   | LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 1           | LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0           | LOG: client 3 'D' data_ready = 1
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: client 6 'G' data_ready = 0             LOG: client 6 'G' data_ready = 0
+LOG: client 7 'H' data_ready = 0           <
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'A' MESSAGE '9'              | LOG: client 3 'D' MESSAGE '10'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 9 input sources   | LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                        | LOG: join_ready = 1
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 1           | LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: client 6 'G' data_ready = 0             LOG: client 6 'G' data_ready = 0
+LOG: client 7 'H' data_ready = 0           <
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()         | LOG: BEGIN: server_handle_join()
+LOG: client 3 'D' MESSAGE '10'             | LOG: join request for new client 'H'
+LOG: END: server_handle_client()           | LOG: BEGIN: server_add_client()
+                                           > LOG: END: server_add_client()
+                                           > LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 9 input sources     LOG: poll()'ing to check 9 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 1             LOG: client 4 'E' data_ready = 1
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: client 6 'G' data_ready = 0             LOG: client 6 'G' data_ready = 0
+LOG: client 7 'H' data_ready = 0             LOG: client 7 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 4 'E' MESSAGE '11'               LOG: client 4 'E' MESSAGE '11'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 9 input sources     LOG: poll()'ing to check 9 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 1             LOG: client 2 'C' data_ready = 1
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: client 6 'G' data_ready = 0             LOG: client 6 'G' data_ready = 0
+LOG: client 7 'H' data_ready = 0             LOG: client 7 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 2 'C' MESSAGE '12'               LOG: client 2 'C' MESSAGE '12'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 9 input sources     LOG: poll()'ing to check 9 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 1             LOG: client 1 'B' data_ready = 1
+LOG: client 2 'C' data_ready = 0             LOG: client 2 'C' data_ready = 0
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: client 6 'G' data_ready = 0             LOG: client 6 'G' data_ready = 0
+LOG: client 7 'H' data_ready = 0             LOG: client 7 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 1 'B' MESSAGE '13'               LOG: client 1 'B' MESSAGE '13'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 9 input sources     LOG: poll()'ing to check 9 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'C' data_ready = 1             LOG: client 2 'C' data_ready = 1
+LOG: client 3 'D' data_ready = 0             LOG: client 3 'D' data_ready = 0
+LOG: client 4 'E' data_ready = 0             LOG: client 4 'E' data_ready = 0
+LOG: client 5 'F' data_ready = 0             LOG: client 5 'F' data_ready = 0
+LOG: client 6 'G' data_ready = 0             LOG: client 6 'G' data_ready = 0
+LOG: client 7 'H' data_ready = 0             LOG: client 7 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 2 'C' DEPARTED                   LOG: client 2 'C' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 8 input sources     LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'D' data_ready = 0             LOG: client 2 'D' data_ready = 0
+LOG: client 3 'E' data_ready = 0             LOG: client 3 'E' data_ready = 0
+LOG: client 4 'F' data_ready = 1             LOG: client 4 'F' data_ready = 1
+LOG: client 5 'G' data_ready = 0             LOG: client 5 'G' data_ready = 0
+LOG: client 6 'H' data_ready = 0             LOG: client 6 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 4 'F' MESSAGE '14'               LOG: client 4 'F' MESSAGE '14'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 8 input sources     LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'D' data_ready = 0             LOG: client 2 'D' data_ready = 0
+LOG: client 3 'E' data_ready = 0             LOG: client 3 'E' data_ready = 0
+LOG: client 4 'F' data_ready = 0             LOG: client 4 'F' data_ready = 0
+LOG: client 5 'G' data_ready = 1             LOG: client 5 'G' data_ready = 1
+LOG: client 6 'H' data_ready = 0             LOG: client 6 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 5 'G' MESSAGE '15'               LOG: client 5 'G' MESSAGE '15'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 8 input sources     LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'D' data_ready = 1             LOG: client 2 'D' data_ready = 1
+LOG: client 3 'E' data_ready = 0             LOG: client 3 'E' data_ready = 0
+LOG: client 4 'F' data_ready = 0             LOG: client 4 'F' data_ready = 0
+LOG: client 5 'G' data_ready = 0             LOG: client 5 'G' data_ready = 0
+LOG: client 6 'H' data_ready = 0             LOG: client 6 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 2 'D' MESSAGE '16'               LOG: client 2 'D' MESSAGE '16'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 8 input sources     LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'D' data_ready = 0             LOG: client 2 'D' data_ready = 0
+LOG: client 3 'E' data_ready = 1             LOG: client 3 'E' data_ready = 1
+LOG: client 4 'F' data_ready = 0             LOG: client 4 'F' data_ready = 0
+LOG: client 5 'G' data_ready = 0             LOG: client 5 'G' data_ready = 0
+LOG: client 6 'H' data_ready = 0             LOG: client 6 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 3 'E' MESSAGE '17'               LOG: client 3 'E' MESSAGE '17'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 8 input sources     LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 1             LOG: client 1 'B' data_ready = 1
+LOG: client 2 'D' data_ready = 0             LOG: client 2 'D' data_ready = 0
+LOG: client 3 'E' data_ready = 0             LOG: client 3 'E' data_ready = 0
+LOG: client 4 'F' data_ready = 0             LOG: client 4 'F' data_ready = 0
+LOG: client 5 'G' data_ready = 0             LOG: client 5 'G' data_ready = 0
+LOG: client 6 'H' data_ready = 0             LOG: client 6 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 1 'B' MESSAGE '18'               LOG: client 1 'B' MESSAGE '18'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 8 input sources     LOG: poll()'ing to check 8 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'D' data_ready = 1             LOG: client 2 'D' data_ready = 1
+LOG: client 3 'E' data_ready = 0             LOG: client 3 'E' data_ready = 0
+LOG: client 4 'F' data_ready = 0             LOG: client 4 'F' data_ready = 0
+LOG: client 5 'G' data_ready = 0             LOG: client 5 'G' data_ready = 0
+LOG: client 6 'H' data_ready = 0             LOG: client 6 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 2 'D' DEPARTED                   LOG: client 2 'D' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 7 input sources     LOG: poll()'ing to check 7 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'E' data_ready = 0             LOG: client 2 'E' data_ready = 0
+LOG: client 3 'F' data_ready = 1             LOG: client 3 'F' data_ready = 1
+LOG: client 4 'G' data_ready = 0             LOG: client 4 'G' data_ready = 0
+LOG: client 5 'H' data_ready = 0             LOG: client 5 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 3 'F' MESSAGE '19'               LOG: client 3 'F' MESSAGE '19'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 7 input sources     LOG: poll()'ing to check 7 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'E' data_ready = 0             LOG: client 2 'E' data_ready = 0
+LOG: client 3 'F' data_ready = 1             LOG: client 3 'F' data_ready = 1
+LOG: client 4 'G' data_ready = 0             LOG: client 4 'G' data_ready = 0
+LOG: client 5 'H' data_ready = 0             LOG: client 5 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 3 'F' MESSAGE '20'               LOG: client 3 'F' MESSAGE '20'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 7 input sources     LOG: poll()'ing to check 7 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'E' data_ready = 1             LOG: client 2 'E' data_ready = 1
+LOG: client 3 'F' data_ready = 0             LOG: client 3 'F' data_ready = 0
+LOG: client 4 'G' data_ready = 0             LOG: client 4 'G' data_ready = 0
+LOG: client 5 'H' data_ready = 0             LOG: client 5 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 2 'E' MESSAGE '21'               LOG: client 2 'E' MESSAGE '21'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 7 input sources     LOG: poll()'ing to check 7 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 1             LOG: client 0 'A' data_ready = 1
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'E' data_ready = 0             LOG: client 2 'E' data_ready = 0
+LOG: client 3 'F' data_ready = 0             LOG: client 3 'F' data_ready = 0
+LOG: client 4 'G' data_ready = 0             LOG: client 4 'G' data_ready = 0
+LOG: client 5 'H' data_ready = 0             LOG: client 5 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'A' MESSAGE '22'               LOG: client 0 'A' MESSAGE '22'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 7 input sources     LOG: poll()'ing to check 7 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'E' data_ready = 0             LOG: client 2 'E' data_ready = 0
+LOG: client 3 'F' data_ready = 0             LOG: client 3 'F' data_ready = 0
+LOG: client 4 'G' data_ready = 1             LOG: client 4 'G' data_ready = 1
+LOG: client 5 'H' data_ready = 0             LOG: client 5 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 4 'G' DEPARTED                   LOG: client 4 'G' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 6 input sources     LOG: poll()'ing to check 6 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 0             LOG: client 0 'A' data_ready = 0
+LOG: client 1 'B' data_ready = 1             LOG: client 1 'B' data_ready = 1
+LOG: client 2 'E' data_ready = 0             LOG: client 2 'E' data_ready = 0
+LOG: client 3 'F' data_ready = 0             LOG: client 3 'F' data_ready = 0
+LOG: client 4 'H' data_ready = 0             LOG: client 4 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 1 'B' MESSAGE '23'               LOG: client 1 'B' MESSAGE '23'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 6 input sources     LOG: poll()'ing to check 6 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'A' data_ready = 1             LOG: client 0 'A' data_ready = 1
+LOG: client 1 'B' data_ready = 0             LOG: client 1 'B' data_ready = 0
+LOG: client 2 'E' data_ready = 0             LOG: client 2 'E' data_ready = 0
+LOG: client 3 'F' data_ready = 0             LOG: client 3 'F' data_ready = 0
+LOG: client 4 'H' data_ready = 0             LOG: client 4 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'A' DEPARTED                   LOG: client 0 'A' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 5 input sources     LOG: poll()'ing to check 5 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'B' data_ready = 1             LOG: client 0 'B' data_ready = 1
+LOG: client 1 'E' data_ready = 0             LOG: client 1 'E' data_ready = 0
+LOG: client 2 'F' data_ready = 0             LOG: client 2 'F' data_ready = 0
+LOG: client 3 'H' data_ready = 0             LOG: client 3 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'B' DEPARTED                   LOG: client 0 'B' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources     LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'E' data_ready = 0             LOG: client 0 'E' data_ready = 0
+LOG: client 1 'F' data_ready = 1             LOG: client 1 'F' data_ready = 1
+LOG: client 2 'H' data_ready = 0             LOG: client 2 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 1 'F' MESSAGE '24'               LOG: client 1 'F' MESSAGE '24'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources     LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'E' data_ready = 1             LOG: client 0 'E' data_ready = 1
+LOG: client 1 'F' data_ready = 0             LOG: client 1 'F' data_ready = 0
+LOG: client 2 'H' data_ready = 0             LOG: client 2 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'E' DEPARTED                   LOG: client 0 'E' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources     LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'F' data_ready = 1             LOG: client 0 'F' data_ready = 1
+LOG: client 1 'H' data_ready = 0             LOG: client 1 'H' data_ready = 0
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'F' DEPARTED                   LOG: client 0 'F' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources     LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'H' data_ready = 1             LOG: client 0 'H' data_ready = 1
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'H' MESSAGE '25'               LOG: client 0 'H' MESSAGE '25'
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources     LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1    LOG: poll() completed with return value 1
+LOG: join_ready = 0                          LOG: join_ready = 0
+LOG: client 0 'H' data_ready = 1             LOG: client 0 'H' data_ready = 1
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()           LOG: BEGIN: server_handle_client()
+LOG: client 0 'H' DEPARTED                   LOG: client 0 'H' DEPARTED
+LOG: END: server_handle_client()             LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()           LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources     LOG: poll()'ing to check 1 input sources
+LOG: poll() completed with return value -1   LOG: poll() completed with return value -1
+LOG: poll() interrupted by a signal          LOG: poll() interrupted by a signal
+LOG: END: server_check_sources()             LOG: END: server_check_sources()
+LOG: BEGIN: server_shutdown()                LOG: BEGIN: server_shutdown()
+LOG: END: server_shutdown()                  LOG: END: server_shutdown()
+
+<testy> OUTPUT for A                         <testy> OUTPUT for A
+-- A JOINED --                               -- A JOINED --
+-- B JOINED --                               -- B JOINED --
+-- C JOINED --                             <
+[C] : 1                                    <
+[B] : 2                                      [B] : 2
+                                           > -- C JOINED --
+[B] : 3                                      [B] : 3
+                                           > [C] : 1
+[A] : 4                                      [A] : 4
+-- D JOINED --                               -- D JOINED --
+-- E JOINED --                             <
+[A] : 5                                      [A] : 5
+[D] : 6                                      [D] : 6
+                                           > -- E JOINED --
+[E] : 7                                      [E] : 7
+[C] : 8                                      [C] : 8
+-- F JOINED --                               -- F JOINED --
+-- G JOINED --                               -- G JOINED --
+-- H JOINED --                             <
+[A] : 9                                      [A] : 9
+[D] : 10                                     [D] : 10
+                                           > -- H JOINED --
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+-- C DEPARTED --                             -- C DEPARTED --
+[F] : 14                                     [F] : 14
+[G] : 15                                     [G] : 15
+[D] : 16                                     [D] : 16
+[E] : 17                                     [E] : 17
+[B] : 18                                     [B] : 18
+-- D DEPARTED --                             -- D DEPARTED --
+[F] : 19                                     [F] : 19
+[F] : 20                                     [F] : 20
+[E] : 21                                     [E] : 21
+[A] : 22                                     [A] : 22
+-- G DEPARTED --                             -- G DEPARTED --
+[B] : 23                                     [B] : 23
+End of Input, Departing                      End of Input, Departing
+A>>                                          A>> 
+
+<testy> OUTPUT for B                         <testy> OUTPUT for B
+-- B JOINED --                               -- B JOINED --
+-- C JOINED --                             <
+[C] : 1                                    <
+[B] : 2                                      [B] : 2
+                                           > -- C JOINED --
+[B] : 3                                      [B] : 3
+                                           > [C] : 1
+[A] : 4                                      [A] : 4
+-- D JOINED --                               -- D JOINED --
+-- E JOINED --                             <
+[A] : 5                                      [A] : 5
+[D] : 6                                      [D] : 6
+                                           > -- E JOINED --
+[E] : 7                                      [E] : 7
+[C] : 8                                      [C] : 8
+-- F JOINED --                               -- F JOINED --
+-- G JOINED --                               -- G JOINED --
+-- H JOINED --                             <
+[A] : 9                                      [A] : 9
+[D] : 10                                     [D] : 10
+                                           > -- H JOINED --
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+-- C DEPARTED --                             -- C DEPARTED --
+[F] : 14                                     [F] : 14
+[G] : 15                                     [G] : 15
+[D] : 16                                     [D] : 16
+[E] : 17                                     [E] : 17
+[B] : 18                                     [B] : 18
+-- D DEPARTED --                             -- D DEPARTED --
+[F] : 19                                     [F] : 19
+[F] : 20                                     [F] : 20
+[E] : 21                                     [E] : 21
+[A] : 22                                     [A] : 22
+-- G DEPARTED --                             -- G DEPARTED --
+[B] : 23                                     [B] : 23
+-- A DEPARTED --                             -- A DEPARTED --
+End of Input, Departing                      End of Input, Departing
+B>>                                          B>> 
+
+<testy> OUTPUT for C                         <testy> OUTPUT for C
+-- C JOINED --                               -- C JOINED --
+[C] : 1                                    <
+[B] : 2                                    <
+[B] : 3                                      [B] : 3
+                                           > [C] : 1
+[A] : 4                                      [A] : 4
+-- D JOINED --                               -- D JOINED --
+-- E JOINED --                             <
+[A] : 5                                      [A] : 5
+[D] : 6                                      [D] : 6
+                                           > -- E JOINED --
+[E] : 7                                      [E] : 7
+[C] : 8                                      [C] : 8
+-- F JOINED --                               -- F JOINED --
+-- G JOINED --                               -- G JOINED --
+-- H JOINED --                             <
+[A] : 9                                      [A] : 9
+[D] : 10                                     [D] : 10
+                                           > -- H JOINED --
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+End of Input, Departing                      End of Input, Departing
+C>>                                          C>> 
+
+<testy> OUTPUT for D                         <testy> OUTPUT for D
+-- D JOINED --                               -- D JOINED --
+-- E JOINED --                             <
+[A] : 5                                      [A] : 5
+[D] : 6                                      [D] : 6
+                                           > -- E JOINED --
+[E] : 7                                      [E] : 7
+[C] : 8                                      [C] : 8
+-- F JOINED --                               -- F JOINED --
+-- G JOINED --                               -- G JOINED --
+-- H JOINED --                             <
+[A] : 9                                      [A] : 9
+[D] : 10                                     [D] : 10
+                                           > -- H JOINED --
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+-- C DEPARTED --                             -- C DEPARTED --
+[F] : 14                                     [F] : 14
+[G] : 15                                     [G] : 15
+[D] : 16                                     [D] : 16
+[E] : 17                                     [E] : 17
+[B] : 18                                     [B] : 18
+End of Input, Departing                      End of Input, Departing
+D>>                                          D>> 
+
+<testy> OUTPUT for E                         <testy> OUTPUT for E
+-- E JOINED --                               -- E JOINED --
+[A] : 5                                    <
+[D] : 6                                    <
+[E] : 7                                      [E] : 7
+[C] : 8                                      [C] : 8
+-- F JOINED --                               -- F JOINED --
+-- G JOINED --                               -- G JOINED --
+-- H JOINED --                             <
+[A] : 9                                      [A] : 9
+[D] : 10                                     [D] : 10
+                                           > -- H JOINED --
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+-- C DEPARTED --                             -- C DEPARTED --
+[F] : 14                                     [F] : 14
+[G] : 15                                     [G] : 15
+[D] : 16                                     [D] : 16
+[E] : 17                                     [E] : 17
+[B] : 18                                     [B] : 18
+-- D DEPARTED --                             -- D DEPARTED --
+[F] : 19                                     [F] : 19
+[F] : 20                                     [F] : 20
+[E] : 21                                     [E] : 21
+[A] : 22                                     [A] : 22
+-- G DEPARTED --                             -- G DEPARTED --
+[B] : 23                                     [B] : 23
+-- A DEPARTED --                             -- A DEPARTED --
+-- B DEPARTED --                             -- B DEPARTED --
+[F] : 24                                     [F] : 24
+End of Input, Departing                      End of Input, Departing
+E>>                                          E>> 
+
+<testy> OUTPUT for F                         <testy> OUTPUT for F
+-- F JOINED --                               -- F JOINED --
+-- G JOINED --                               -- G JOINED --
+-- H JOINED --                             <
+[A] : 9                                      [A] : 9
+[D] : 10                                     [D] : 10
+                                           > -- H JOINED --
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+-- C DEPARTED --                             -- C DEPARTED --
+[F] : 14                                     [F] : 14
+[G] : 15                                     [G] : 15
+[D] : 16                                     [D] : 16
+[E] : 17                                     [E] : 17
+[B] : 18                                     [B] : 18
+-- D DEPARTED --                             -- D DEPARTED --
+[F] : 19                                     [F] : 19
+[F] : 20                                     [F] : 20
+[E] : 21                                     [E] : 21
+[A] : 22                                     [A] : 22
+-- G DEPARTED --                             -- G DEPARTED --
+[B] : 23                                     [B] : 23
+-- A DEPARTED --                             -- A DEPARTED --
+-- B DEPARTED --                             -- B DEPARTED --
+[F] : 24                                     [F] : 24
+-- E DEPARTED --                             -- E DEPARTED --
+End of Input, Departing                      End of Input, Departing
+F>>                                          F>> 
+
+<testy> OUTPUT for G                         <testy> OUTPUT for G
+-- G JOINED --                               -- G JOINED --
+-- H JOINED --                             <
+[A] : 9                                      [A] : 9
+[D] : 10                                     [D] : 10
+                                           > -- H JOINED --
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+-- C DEPARTED --                             -- C DEPARTED --
+[F] : 14                                     [F] : 14
+[G] : 15                                     [G] : 15
+[D] : 16                                     [D] : 16
+[E] : 17                                     [E] : 17
+[B] : 18                                     [B] : 18
+-- D DEPARTED --                             -- D DEPARTED --
+[F] : 19                                     [F] : 19
+[F] : 20                                     [F] : 20
+[E] : 21                                     [E] : 21
+[A] : 22                                     [A] : 22
+End of Input, Departing                      End of Input, Departing
+G>>                                          G>> 
+
+<testy> OUTPUT for H                         <testy> OUTPUT for H
+-- H JOINED --                               -- H JOINED --
+[A] : 9                                    <
+[D] : 10                                   <
+[E] : 11                                     [E] : 11
+[C] : 12                                     [C] : 12
+[B] : 13                                     [B] : 13
+-- C DEPARTED --                             -- C DEPARTED --
+[F] : 14                                     [F] : 14
+[G] : 15                                     [G] : 15
+[D] : 16                                     [D] : 16
+[E] : 17                                     [E] : 17
+[B] : 18                                     [B] : 18
+-- D DEPARTED --                             -- D DEPARTED --
+[F] : 19                                     [F] : 19
+[F] : 20                                     [F] : 20
+[E] : 21                                     [E] : 21
+[A] : 22                                     [A] : 22
+-- G DEPARTED --                             -- G DEPARTED --
+[B] : 23                                     [B] : 23
+-- A DEPARTED --                             -- A DEPARTED --
+-- B DEPARTED --                             -- B DEPARTED --
+[F] : 24                                     [F] : 24
+-- E DEPARTED --                             -- E DEPARTED --
+-- F DEPARTED --                             -- F DEPARTED --
+[H] : 25                                     [H] : 25
+End of Input, Departing                      End of Input, Departing
+H>>                                          H>> 
+                                           )
+                                           )
+                                           )
+                                           )
+                                           )
+                                           )
+                                           )
+                                           )
+                                           )
+#+END_SRC
+
+--- Line Differences ---
+ACTUAL:  93) LOG: join_ready = 0
+ACTUAL:  94) LOG: client 0 'A' data_ready = 0
+ACTUAL:  95) LOG: client 1 'B' data_ready = 1
+ACTUAL:  96) LOG: END: server_check_sources()
+ACTUAL:  97) LOG: BEGIN: server_handle_client()
+ACTUAL:  98) LOG: client 1 'B' MESSAGE '2'
+ACTUAL:  99) LOG: END: server_handle_client()
+ACTUAL: 100) LOG: BEGIN: server_check_sources()
+ACTUAL: 101) LOG: poll()'ing to check 3 input sources
+ACTUAL: 102) LOG: poll() completed with return value 1
+EXPECT: 107) LOG: client 1 'B' data_ready = 0
+EXPECT: 108) LOG: client 2 'C' data_ready = 1
+EXPECT: 109) LOG: END: server_check_sources()
+EXPECT: 110) LOG: BEGIN: server_handle_client()
+EXPECT: 111) LOG: client 2 'C' MESSAGE '1'
+EXPECT: 112) LOG: END: server_handle_client()
+EXPECT: 113) LOG: BEGIN: server_check_sources()
+EXPECT: 114) LOG: poll()'ing to check 4 input sources
+EXPECT: 115) LOG: poll() completed with return value 1
+EXPECT: 116) LOG: join_ready = 0
+EXPECT: 117) LOG: client 0 'A' data_ready = 0
+EXPECT: 122) LOG: client 1 'B' MESSAGE '2'
+ACTUAL: 121) LOG: client 1 'B' MESSAGE '3'
+EXPECT: 129) LOG: client 1 'B' data_ready = 1
+EXPECT: 130) LOG: client 2 'C' data_ready = 0
+ACTUAL: 128) LOG: client 1 'B' data_ready = 0
+ACTUAL: 129) LOG: client 2 'C' data_ready = 1
+EXPECT: 133) LOG: client 1 'B' MESSAGE '3'
+ACTUAL: 132) LOG: client 2 'C' MESSAGE '1'
+EXPECT: 162) LOG: join_ready = 1
+EXPECT: 163) LOG: client 0 'A' data_ready = 0
+EXPECT: 164) LOG: client 1 'B' data_ready = 0
+EXPECT: 165) LOG: client 2 'C' data_ready = 0
+EXPECT: 166) LOG: client 3 'D' data_ready = 0
+EXPECT: 167) LOG: END: server_check_sources()
+EXPECT: 168) LOG: BEGIN: server_handle_join()
+EXPECT: 169) LOG: join request for new client 'E'
+EXPECT: 170) LOG: BEGIN: server_add_client()
+EXPECT: 171) LOG: END: server_add_client()
+EXPECT: 172) LOG: END: server_handle_join()
+EXPECT: 173) LOG: BEGIN: server_check_sources()
+EXPECT: 174) LOG: poll()'ing to check 6 input sources
+EXPECT: 175) LOG: poll() completed with return value 1
+EXPECT: 181) LOG: client 4 'E' data_ready = 0
+EXPECT: 187) LOG: poll()'ing to check 6 input sources
+ACTUAL: 171) LOG: poll()'ing to check 5 input sources
+EXPECT: 194) LOG: client 4 'E' data_ready = 0
+ACTUAL: 183) LOG: poll()'ing to check 5 input sources
+ACTUAL: 184) LOG: poll() completed with return value 1
+ACTUAL: 185) LOG: join_ready = 1
+ACTUAL: 186) LOG: client 0 'A' data_ready = 0
+ACTUAL: 187) LOG: client 1 'B' data_ready = 0
+ACTUAL: 188) LOG: client 2 'C' data_ready = 0
+ACTUAL: 189) LOG: client 3 'D' data_ready = 0
+ACTUAL: 190) LOG: END: server_check_sources()
+ACTUAL: 191) LOG: BEGIN: server_handle_join()
+ACTUAL: 192) LOG: join request for new client 'E'
+ACTUAL: 193) LOG: BEGIN: server_add_client()
+ACTUAL: 194) LOG: END: server_add_client()
+ACTUAL: 195) LOG: END: server_handle_join()
+ACTUAL: 196) LOG: BEGIN: server_check_sources()
+EXPECT: 259) LOG: join_ready = 1
+EXPECT: 260) LOG: client 0 'A' data_ready = 0
+ACTUAL: 256) LOG: join_ready = 0
+ACTUAL: 257) LOG: client 0 'A' data_ready = 1
+EXPECT: 268) LOG: BEGIN: server_handle_join()
+EXPECT: 269) LOG: join request for new client 'H'
+EXPECT: 270) LOG: BEGIN: server_add_client()
+EXPECT: 271) LOG: END: server_add_client()
+EXPECT: 272) LOG: END: server_handle_join()
+ACTUAL: 265) LOG: BEGIN: server_handle_client()
+ACTUAL: 266) LOG: client 0 'A' MESSAGE '9'
+ACTUAL: 267) LOG: END: server_handle_client()
+EXPECT: 274) LOG: poll()'ing to check 9 input sources
+ACTUAL: 269) LOG: poll()'ing to check 8 input sources
+EXPECT: 277) LOG: client 0 'A' data_ready = 1
+ACTUAL: 272) LOG: client 0 'A' data_ready = 0
+EXPECT: 280) LOG: client 3 'D' data_ready = 0
+ACTUAL: 275) LOG: client 3 'D' data_ready = 1
+EXPECT: 284) LOG: client 7 'H' data_ready = 0
+EXPECT: 287) LOG: client 0 'A' MESSAGE '9'
+ACTUAL: 281) LOG: client 3 'D' MESSAGE '10'
+EXPECT: 290) LOG: poll()'ing to check 9 input sources
+ACTUAL: 284) LOG: poll()'ing to check 8 input sources
+EXPECT: 292) LOG: join_ready = 0
+ACTUAL: 286) LOG: join_ready = 1
+EXPECT: 296) LOG: client 3 'D' data_ready = 1
+ACTUAL: 290) LOG: client 3 'D' data_ready = 0
+EXPECT: 300) LOG: client 7 'H' data_ready = 0
+EXPECT: 302) LOG: BEGIN: server_handle_client()
+EXPECT: 303) LOG: client 3 'D' MESSAGE '10'
+EXPECT: 304) LOG: END: server_handle_client()
+ACTUAL: 295) LOG: BEGIN: server_handle_join()
+ACTUAL: 296) LOG: join request for new client 'H'
+ACTUAL: 297) LOG: BEGIN: server_add_client()
+ACTUAL: 298) LOG: END: server_add_client()
+ACTUAL: 299) LOG: END: server_handle_join()
+EXPECT: 628) -- C JOINED --
+EXPECT: 629) [C] : 1
+ACTUAL: 624) -- C JOINED --
+ACTUAL: 626) [C] : 1
+EXPECT: 634) -- E JOINED --
+ACTUAL: 631) -- E JOINED --
+EXPECT: 641) -- H JOINED --
+ACTUAL: 638) -- H JOINED --
+EXPECT: 665) -- C JOINED --
+EXPECT: 666) [C] : 1
+ACTUAL: 661) -- C JOINED --
+ACTUAL: 663) [C] : 1
+EXPECT: 671) -- E JOINED --
+ACTUAL: 668) -- E JOINED --
+EXPECT: 678) -- H JOINED --
+ACTUAL: 675) -- H JOINED --
+EXPECT: 703) [C] : 1
+EXPECT: 704) [B] : 2
+ACTUAL: 699) [C] : 1
+EXPECT: 708) -- E JOINED --
+ACTUAL: 704) -- E JOINED --
+EXPECT: 715) -- H JOINED --
+ACTUAL: 711) -- H JOINED --
+EXPECT: 726) -- E JOINED --
+ACTUAL: 722) -- E JOINED --
+EXPECT: 733) -- H JOINED --
+ACTUAL: 729) -- H JOINED --
+EXPECT: 750) [A] : 5
+EXPECT: 751) [D] : 6
+EXPECT: 756) -- H JOINED --
+ACTUAL: 750) -- H JOINED --
+EXPECT: 784) -- H JOINED --
+ACTUAL: 778) -- H JOINED --
+EXPECT: 812) -- H JOINED --
+ACTUAL: 806) -- H JOINED --
+EXPECT: 834) [A] : 9
+EXPECT: 835) [D] : 10

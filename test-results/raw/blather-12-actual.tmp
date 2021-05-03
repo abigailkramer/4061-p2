@@ -1,0 +1,56 @@
+>> START server ./bl_server metropolis
+>> START clark ./bl_client metropolis Clark
+>> INPUT clark Home at last
+>> START bruce ./bl_client metropolis Bruce
+>> INPUT clark Ah, a visitor
+>> INPUT bruce Hang on a sec, Alfred needs something.
+>> INPUT bruce <EOF>
+>> INPUT clark I've got an errand too.
+>> INPUT clark <EOF>
+>> START bruce2 ./bl_client metropolis Bruce
+>> INPUT bruce2 Okay I'm back. 
+>> START clark2 ./bl_client metropolis Clark
+>> INPUT bruce2 Where can I get a gyro?
+>> INPUT clark2 I know just the place, come on
+>> INPUT bruce2 Righteous
+>> INPUT bruce2 <EOF>
+>> INPUT clark2 <EOF>
+>> SIGNAL server -15
+Program 'server' is not alive: ./testy: line 284: kill: (1537020) - No such process
+Non-zero return code 13
+Can't send SIGNAL to dead program 'server' (./bl_server metropolis)
+>> WAIT_ALL
+<testy> WAIT for server
+Non-zero return code 13
+<testy> WAIT for clark
+Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+<testy> WAIT for bruce
+Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+<testy> WAIT for bruce2
+Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+<testy> WAIT for clark2
+Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+>> CHECK_ALL cat
+<testy> CHECK_FAILURES for server
+<testy> CHECK_FAILURES for clark
+<testy> CHECK_FAILURES for bruce
+<testy> CHECK_FAILURES for bruce2
+<testy> CHECK_FAILURES for clark2
+>> OUTPUT_ALL ./test_filter_client_output
+
+<testy> OUTPUT for server
+LOG: BEGIN: server_start()
+Couldn't open file metropolÿ.log: Invalid argument
+
+<testy> OUTPUT for clark
+
+<testy> OUTPUT for bruce
+
+<testy> OUTPUT for bruce2
+
+<testy> OUTPUT for clark2
+
+
+
+
+

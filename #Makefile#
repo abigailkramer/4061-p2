@@ -28,4 +28,4 @@ bl_client : bl_client.o simpio.o util.o
 clean: 
 	rm -f bl_server bl_client *.fifo
 
-#include test_Makefile
+include test_Makefile

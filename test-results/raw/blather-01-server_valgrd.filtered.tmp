@@ -1,0 +1,27 @@
+==1536051== Memcheck, a memory error detector
+==1536051== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1536051== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==1536051== Command: ./bl_server gotham
+==1536051== Parent PID: 1536048
+==1536051== 
+==1536051== 
+==1536051== Process terminating with default action of signal 15 (SIGTERM)
+==1536051==    at 0x4E13F24: __pthread_initialize_minimal (nptl-init.c:311)
+==1536051==    by 0x4E1300C: ??? (in /usr/lib/x86_64-linux-gnu/libpthread-2.31.so)
+==1536051==    by 0x1FFF0005EF: ???
+==1536051==    by 0x4011B4B: call_init.part.0 (dl-init.c:58)
+==1536051==    by 0x4011D05: call_init (dl-init.c:30)
+==1536051==    by 0x4011D05: _dl_init (dl-init.c:86)
+==1536051==    by 0x4001139: ??? (in /usr/lib/x86_64-linux-gnu/ld-2.31.so)
+==1536051==    by 0x1: ???
+==1536051==    by 0x1FFF000902: ???
+==1536051==    by 0x1FFF00090E: ???
+==1536051== 
+==1536051== HEAP SUMMARY:
+==1536051==     in use at exit: 0 bytes in 0 blocks
+==1536051==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==1536051== 
+==1536051== All heap blocks were freed -- no leaks are possible
+==1536051== 
+==1536051== For lists of detected and suppressed errors, rerun with: -s
+==1536051== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

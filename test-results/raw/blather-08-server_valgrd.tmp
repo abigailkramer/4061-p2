@@ -1,0 +1,15 @@
+==1536539== Memcheck, a memory error detector
+==1536539== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1536539== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==1536539== Command: ./bl_server gotham
+==1536539== Parent PID: 1536537
+==1536539== 
+==1536539== 
+==1536539== HEAP SUMMARY:
+==1536539==     in use at exit: 0 bytes in 0 blocks
+==1536539==   total heap usage: 47 allocs, 47 frees, 1,991 bytes allocated
+==1536539== 
+==1536539== All heap blocks were freed -- no leaks are possible
+==1536539== 
+==1536539== For lists of detected and suppressed errors, rerun with: -s
+==1536539== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

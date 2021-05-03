@@ -1,0 +1,229 @@
+TEST OUTPUT MISMATCH: Side by Side Differences shown below 
+- Expect output in: test-results/raw/blather-13-expect.tmp
+- Acutal output in: test-results/raw/blather-13-actual.tmp
+- Differing lines have a character like '|' and '<' in the middle
+
+#+BEGIN_SRC diff
+==== EXPECT ====                                                                      ==== ACTUAL ====                                                                   
+>> START server ./bl_server metropolis                                                >> START server ./bl_server metropolis
+>> START clark ./bl_client metropolis Clark                                           >> START clark ./bl_client metropolis Clark
+>> START lois ./bl_client metropolis Lois                                             >> START lois ./bl_client metropolis Lois
+>> START bruce ./bl_client metropolis Bruce                                           >> START bruce ./bl_client metropolis Bruce
+>> INPUT clark <EOF>                                                                  >> INPUT clark <EOF>
+>> INPUT bruce <EOF>                                                                  >> INPUT bruce <EOF>
+>> INPUT lois <EOF>                                                                   >> INPUT lois <EOF>
+>> SIGNAL server -15                                                                  >> SIGNAL server -15
+                                                                                    > Program 'server' is not alive: ./testy: line 284: kill: (1537192) - No such process
+                                                                                    > Non-zero return code 13
+                                                                                    > Can't send SIGNAL to dead program 'server' (./bl_server metropolis)
+>> WAIT_ALL                                                                           >> WAIT_ALL
+<testy> WAIT for server                                                               <testy> WAIT for server
+                                                                                    > Non-zero return code 13
+<testy> WAIT for clark                                                                <testy> WAIT for clark
+                                                                                    > Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+<testy> WAIT for lois                                                                 <testy> WAIT for lois
+                                                                                    > Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+<testy> WAIT for bruce                                                                <testy> WAIT for bruce
+                                                                                    > Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+>> CHECK_ALL cat                                                                      >> CHECK_ALL cat
+<testy> CHECK_FAILURES for server                                                     <testy> CHECK_FAILURES for server
+<testy> CHECK_FAILURES for clark                                                      <testy> CHECK_FAILURES for clark
+<testy> CHECK_FAILURES for lois                                                       <testy> CHECK_FAILURES for lois
+<testy> CHECK_FAILURES for bruce                                                      <testy> CHECK_FAILURES for bruce
+>> OUTPUT_ALL ./test_filter_client_output                                             >> OUTPUT_ALL ./test_filter_client_output
+
+<testy> OUTPUT for server                                                             <testy> OUTPUT for server
+LOG: BEGIN: server_start()                                                            LOG: BEGIN: server_start()
+LOG: END: server_start()                                                            | Couldn't open file metropolÿ.log: Invalid argument
+LOG: BEGIN: server_check_sources()                                                  <
+LOG: poll()'ing to check 1 input sources                                            <
+LOG: poll() completed with return value 1                                           <
+LOG: join_ready = 1                                                                 <
+LOG: END: server_check_sources()                                                    <
+LOG: BEGIN: server_handle_join()                                                    <
+LOG: join request for new client 'Clark'                                            <
+LOG: BEGIN: server_add_client()                                                     <
+LOG: END: server_add_client()                                                       <
+LOG: END: server_handle_join()                                                      <
+LOG: BEGIN: server_check_sources()                                                  <
+LOG: poll()'ing to check 2 input sources                                            <
+LOG: poll() completed with return value 1                                           <
+LOG: join_ready = 1                                                                 <
+LOG: client 0 'Clark' data_ready = 0                                                <
+LOG: END: server_check_sources()                                                    <
+LOG: BEGIN: server_handle_join()                                                    <
+LOG: join request for new client 'Lois'                                             <
+LOG: BEGIN: server_add_client()                                                     <
+LOG: END: server_add_client()                                                       <
+LOG: END: server_handle_join()                                                      <
+LOG: BEGIN: server_check_sources()                                                  <
+LOG: poll()'ing to check 3 input sources                                            <
+LOG: poll() completed with return value 1                                           <
+LOG: join_ready = 1                                                                 <
+LOG: client 0 'Clark' data_ready = 0                                                <
+LOG: client 1 'Lois' data_ready = 0                                                 <
+LOG: END: server_check_sources()                                                    <
+LOG: BEGIN: server_handle_join()                                                    <
+LOG: join request for new client 'Bruce'                                            <
+LOG: BEGIN: server_add_client()                                                     <
+LOG: END: server_add_client()                                                       <
+LOG: END: server_handle_join()                                                      <
+LOG: BEGIN: server_check_sources()                                                  <
+LOG: poll()'ing to check 4 input sources                                            <
+LOG: poll() completed with return value 1                                           <
+LOG: join_ready = 0                                                                 <
+LOG: client 0 'Clark' data_ready = 1                                                <
+LOG: client 1 'Lois' data_ready = 0                                                 <
+LOG: client 2 'Bruce' data_ready = 0                                                <
+LOG: END: server_check_sources()                                                    <
+LOG: BEGIN: server_handle_client()                                                  <
+LOG: client 0 'Clark' DEPARTED                                                      <
+LOG: END: server_handle_client()                                                    <
+LOG: BEGIN: server_check_sources()                                                  <
+LOG: poll()'ing to check 3 input sources                                            <
+LOG: poll() completed with return value 1                                           <
+LOG: join_ready = 0                                                                 <
+LOG: client 0 'Lois' data_ready = 0                                                 <
+LOG: client 1 'Bruce' data_ready = 1                                                <
+LOG: END: server_check_sources()                                                    <
+LOG: BEGIN: server_handle_client()                                                  <
+LOG: client 1 'Bruce' DEPARTED                                                      <
+LOG: END: server_handle_client()                                                    <
+LOG: BEGIN: server_check_sources()                                                  <
+LOG: poll()'ing to check 2 input sources                                            <
+LOG: poll() completed with return value 1                                           <
+LOG: join_ready = 0                                                                 <
+LOG: client 0 'Lois' data_ready = 1                                                 <
+LOG: END: server_check_sources()                                                    <
+LOG: BEGIN: server_handle_client()                                                  <
+LOG: client 0 'Lois' DEPARTED                                                       <
+LOG: END: server_handle_client()                                                    <
+LOG: BEGIN: server_check_sources()                                                  <
+LOG: poll()'ing to check 1 input sources                                            <
+LOG: poll() completed with return value -1                                          <
+LOG: poll() interrupted by a signal                                                 <
+LOG: END: server_check_sources()                                                    <
+LOG: BEGIN: server_shutdown()                                                       <
+LOG: END: server_shutdown()                                                         <
+
+<testy> OUTPUT for clark                                                              <testy> OUTPUT for clark
+-- Clark JOINED --                                                                  <
+-- Lois JOINED --                                                                   <
+-- Bruce JOINED --                                                                  <
+End of Input, Departing                                                             <
+Clark>>                                                                             <
+
+<testy> OUTPUT for lois                                                               <testy> OUTPUT for lois
+-- Lois JOINED --                                                                   <
+-- Bruce JOINED --                                                                  <
+-- Clark DEPARTED --                                                                <
+-- Bruce DEPARTED --                                                                <
+End of Input, Departing                                                             <
+Lois>>                                                                              <
+
+<testy> OUTPUT for bruce                                                              <testy> OUTPUT for bruce
+-- Bruce JOINED --                                                                  |
+-- Clark DEPARTED --                                                                |
+End of Input, Departing                                                             |
+Bruce>>                                                                             |
+#+END_SRC
+
+--- Line Differences ---
+ACTUAL:   9) Program 'server' is not alive: ./testy: line 284: kill: (1537192) - No such process
+ACTUAL:  10) Non-zero return code 13
+ACTUAL:  11) Can't send SIGNAL to dead program 'server' (./bl_server metropolis)
+ACTUAL:  14) Non-zero return code 13
+ACTUAL:  16) Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+ACTUAL:  18) Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+ACTUAL:  20) Return Code 137: TIMEOUT, program killed, not complete within 20s sec limit
+EXPECT:  23) LOG: END: server_start()
+EXPECT:  24) LOG: BEGIN: server_check_sources()
+EXPECT:  25) LOG: poll()'ing to check 1 input sources
+EXPECT:  26) LOG: poll() completed with return value 1
+EXPECT:  27) LOG: join_ready = 1
+EXPECT:  28) LOG: END: server_check_sources()
+EXPECT:  29) LOG: BEGIN: server_handle_join()
+EXPECT:  30) LOG: join request for new client 'Clark'
+EXPECT:  31) LOG: BEGIN: server_add_client()
+EXPECT:  32) LOG: END: server_add_client()
+EXPECT:  33) LOG: END: server_handle_join()
+EXPECT:  34) LOG: BEGIN: server_check_sources()
+EXPECT:  35) LOG: poll()'ing to check 2 input sources
+EXPECT:  36) LOG: poll() completed with return value 1
+EXPECT:  37) LOG: join_ready = 1
+EXPECT:  38) LOG: client 0 'Clark' data_ready = 0
+EXPECT:  39) LOG: END: server_check_sources()
+EXPECT:  40) LOG: BEGIN: server_handle_join()
+EXPECT:  41) LOG: join request for new client 'Lois'
+EXPECT:  42) LOG: BEGIN: server_add_client()
+EXPECT:  43) LOG: END: server_add_client()
+EXPECT:  44) LOG: END: server_handle_join()
+EXPECT:  45) LOG: BEGIN: server_check_sources()
+EXPECT:  46) LOG: poll()'ing to check 3 input sources
+EXPECT:  47) LOG: poll() completed with return value 1
+EXPECT:  48) LOG: join_ready = 1
+EXPECT:  49) LOG: client 0 'Clark' data_ready = 0
+EXPECT:  50) LOG: client 1 'Lois' data_ready = 0
+EXPECT:  51) LOG: END: server_check_sources()
+EXPECT:  52) LOG: BEGIN: server_handle_join()
+EXPECT:  53) LOG: join request for new client 'Bruce'
+EXPECT:  54) LOG: BEGIN: server_add_client()
+EXPECT:  55) LOG: END: server_add_client()
+EXPECT:  56) LOG: END: server_handle_join()
+EXPECT:  57) LOG: BEGIN: server_check_sources()
+EXPECT:  58) LOG: poll()'ing to check 4 input sources
+EXPECT:  59) LOG: poll() completed with return value 1
+EXPECT:  60) LOG: join_ready = 0
+EXPECT:  61) LOG: client 0 'Clark' data_ready = 1
+EXPECT:  62) LOG: client 1 'Lois' data_ready = 0
+EXPECT:  63) LOG: client 2 'Bruce' data_ready = 0
+EXPECT:  64) LOG: END: server_check_sources()
+EXPECT:  65) LOG: BEGIN: server_handle_client()
+EXPECT:  66) LOG: client 0 'Clark' DEPARTED
+EXPECT:  67) LOG: END: server_handle_client()
+EXPECT:  68) LOG: BEGIN: server_check_sources()
+EXPECT:  69) LOG: poll()'ing to check 3 input sources
+EXPECT:  70) LOG: poll() completed with return value 1
+EXPECT:  71) LOG: join_ready = 0
+EXPECT:  72) LOG: client 0 'Lois' data_ready = 0
+EXPECT:  73) LOG: client 1 'Bruce' data_ready = 1
+EXPECT:  74) LOG: END: server_check_sources()
+EXPECT:  75) LOG: BEGIN: server_handle_client()
+EXPECT:  76) LOG: client 1 'Bruce' DEPARTED
+EXPECT:  77) LOG: END: server_handle_client()
+EXPECT:  78) LOG: BEGIN: server_check_sources()
+EXPECT:  79) LOG: poll()'ing to check 2 input sources
+EXPECT:  80) LOG: poll() completed with return value 1
+EXPECT:  81) LOG: join_ready = 0
+EXPECT:  82) LOG: client 0 'Lois' data_ready = 1
+EXPECT:  83) LOG: END: server_check_sources()
+EXPECT:  84) LOG: BEGIN: server_handle_client()
+EXPECT:  85) LOG: client 0 'Lois' DEPARTED
+EXPECT:  86) LOG: END: server_handle_client()
+EXPECT:  87) LOG: BEGIN: server_check_sources()
+EXPECT:  88) LOG: poll()'ing to check 1 input sources
+EXPECT:  89) LOG: poll() completed with return value -1
+EXPECT:  90) LOG: poll() interrupted by a signal
+EXPECT:  91) LOG: END: server_check_sources()
+EXPECT:  92) LOG: BEGIN: server_shutdown()
+EXPECT:  93) LOG: END: server_shutdown()
+ACTUAL:  30) Couldn't open file metropolÿ.log: Invalid argument
+EXPECT:  96) -- Clark JOINED --
+EXPECT:  97) -- Lois JOINED --
+EXPECT:  98) -- Bruce JOINED --
+EXPECT:  99) End of Input, Departing
+EXPECT: 100) Clark>> 
+EXPECT: 103) -- Lois JOINED --
+EXPECT: 104) -- Bruce JOINED --
+EXPECT: 105) -- Clark DEPARTED --
+EXPECT: 106) -- Bruce DEPARTED --
+EXPECT: 107) End of Input, Departing
+EXPECT: 108) Lois>> 
+EXPECT: 111) -- Bruce JOINED --
+EXPECT: 112) -- Clark DEPARTED --
+EXPECT: 113) End of Input, Departing
+EXPECT: 114) Bruce>> 
+ACTUAL:  37) 
+ACTUAL:  38) 
+ACTUAL:  39) 
+ACTUAL:  40) 

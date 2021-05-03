@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     	DO_ADVANCED = 1;
     }
 
-    char server_name[MAXNAME];
+    char server_name[MAXPATH];
     strncpy(server_name, argv[1], sizeof(argv[1]));
 
     struct sigaction my_sa = {};
@@ -58,6 +58,10 @@ int main(int argc, char *argv[]) {
             server_tick(server);
             server_ping_clients(server);
             server_remove_disconnected(server, 10);	// 10 is placeholder disconnect_secs    
+        }
+
+        if (server->join_ready) {
+            server_handle_join(server);
         }
         
         for (int i = 0; i < server->n_clients; i++) {
