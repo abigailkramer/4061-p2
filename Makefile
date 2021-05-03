@@ -16,4 +16,4 @@ bl_showlog : bl_showlog.c
 clean: 
 	rm -f bl_server bl_client bl_showlog *.fifo *.log
 
-#include test_Makefile
+include test_Makefile
