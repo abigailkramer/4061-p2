@@ -1,0 +1,4 @@
+LOG: BEGIN: server_start()
+LOG: END: server_start()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources

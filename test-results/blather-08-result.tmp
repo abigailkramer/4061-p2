@@ -1,0 +1,16 @@
+(TEST 8) Two Clients + Message Exchange
+COMMENTS:
+Two clients both log in and exchange several messages.
+
+
+program: TESTY_MULTI
+
+-----------------------------------------------------------------------------------------------
+* Summary Program Information
+
+| KEY      | COMMAND                  | RET | STATE      | OUTPUT-FILE                       | VALGRIND                     | 
+| server   | ./bl_server gotham       |   0 | Done       | blather-08-server_output_file.tmp | blather-08-server_valgrd.tmp | 
+| bruce    | ./bl_client gotham Bruce |   0 | Done       | blather-08-bruce_output_file.tmp  | blather-08-bruce_valgrd.tmp  | 
+| clark    | ./bl_client gotham Clark |   0 | Done       | blather-08-clark_output_file.tmp  | blather-08-clark_valgrd.tmp  | 
+
+ALL OK

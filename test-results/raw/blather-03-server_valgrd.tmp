@@ -1,0 +1,6 @@
+==2295133== Memcheck, a memory error detector
+==2295133== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2295133== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==2295133== Command: ./bl_server gotham
+==2295133== Parent PID: 2295130
+==2295133== 

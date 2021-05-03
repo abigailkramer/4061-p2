@@ -1,0 +1,201 @@
+>> START server ./bl_server metropolis
+>> START clark ./bl_client metropolis Clark
+>> INPUT clark Home at last
+>> START bruce ./bl_client metropolis Bruce
+>> INPUT clark Ah, a visitor
+>> INPUT bruce Hang on a sec, Alfred needs something.
+>> INPUT bruce <EOF>
+>> INPUT clark That guy...
+>> START bruce2 ./bl_client metropolis Bruce
+>> INPUT bruce2 Okay I'm back. 
+>> INPUT bruce2 Where can I get a gyro?
+>> INPUT clark That wasn't really what I had in mind
+>> INPUT clark <EOF>
+>> INPUT bruce2 <EOF>
+>> SIGNAL server -15
+>> WAIT_ALL
+<testy> WAIT for server
+<testy> WAIT for clark
+<testy> WAIT for bruce
+<testy> WAIT for bruce2
+>> CHECK_ALL cat
+<testy> CHECK_FAILURES for server
+<testy> CHECK_FAILURES for clark
+<testy> CHECK_FAILURES for bruce
+<testy> CHECK_FAILURES for bruce2
+>> OUTPUT_ALL ./test_filter_client_output
+
+<testy> OUTPUT for server
+LOG: BEGIN: server_start()
+LOG: END: server_start()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Clark'
+LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()
+LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' MESSAGE 'Home at last'
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 1
+LOG: client 0 'Clark' data_ready = 0
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Bruce'
+LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()
+LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1
+LOG: client 1 'Bruce' data_ready = 0
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' MESSAGE 'Ah, a visitor'
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 1 'Bruce' MESSAGE 'Hang on a sec, Alfred needs something.'
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 1 'Bruce' DEPARTED
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' MESSAGE 'That guy...'
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 1
+LOG: client 0 'Clark' data_ready = 0
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Bruce'
+LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()
+LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 1 'Bruce' MESSAGE 'Okay I'm back. '
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 1 'Bruce' MESSAGE 'Where can I get a gyro?'
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1
+LOG: client 1 'Bruce' data_ready = 0
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' MESSAGE 'That wasn't really what I had in mind'
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1
+LOG: client 1 'Bruce' data_ready = 0
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' DEPARTED
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1
+LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 1
+LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()
+LOG: client 0 'Bruce' DEPARTED
+LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources
+LOG: poll() completed with return value -1
+LOG: poll() interrupted by a signal
+LOG: END: server_check_sources()
+LOG: BEGIN: server_shutdown()
+LOG: END: server_shutdown()
+
+<testy> OUTPUT for clark
+-- Clark JOINED --
+[Clark] : Home at last
+-- Bruce JOINED --
+[Clark] : Ah, a visitor
+[Bruce] : Hang on a sec, Alfred needs something.
+-- Bruce DEPARTED --
+[Clark] : That guy...
+-- Bruce JOINED --
+[Bruce] : Okay I'm back. 
+[Bruce] : Where can I get a gyro?
+[Clark] : That wasn't really what I had in mind
+End of Input, Departing
+Clark>> 
+
+<testy> OUTPUT for bruce
+-- Bruce JOINED --
+[Clark] : Ah, a visitor
+[Bruce] : Hang on a sec, Alfred needs something.
+End of Input, Departing
+Bruce>> 
+
+<testy> OUTPUT for bruce2
+-- Bruce JOINED --
+[Bruce] : Okay I'm back. 
+[Bruce] : Where can I get a gyro?
+[Clark] : That wasn't really what I had in mind
+-- Clark DEPARTED --
+End of Input, Departing
+Bruce>> 
+
+
+
+

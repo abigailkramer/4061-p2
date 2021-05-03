@@ -1,0 +1,18 @@
+(TEST 10) Two Clients + 1st Departs
+COMMENTS:
+Two clients both log in and exchange messages. The 1st client departs
+and 2nd continues to log messages. Checks to ensure that client
+departure does not interfere with continued messages.
+
+
+program: TESTY_MULTI
+
+-----------------------------------------------------------------------------------------------
+* Summary Program Information
+
+| KEY      | COMMAND                  | RET | STATE      | OUTPUT-FILE                       | VALGRIND                     | 
+| server   | ./bl_server gotham       |   0 | Done       | blather-10-server_output_file.tmp | blather-10-server_valgrd.tmp | 
+| clark    | ./bl_client gotham Clark |   0 | Done       | blather-10-clark_output_file.tmp  | blather-10-clark_valgrd.tmp  | 
+| bruce    | ./bl_client gotham Bruce |   0 | Done       | blather-10-bruce_output_file.tmp  | blather-10-bruce_valgrd.tmp  | 
+
+ALL OK

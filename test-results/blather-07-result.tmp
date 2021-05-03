@@ -1,0 +1,18 @@
+(TEST 7) Two Clients + Single Message
+COMMENTS:
+Two clients and one sends a message. The server should LOG
+joins/departures and broadcast the message from one client to the
+other. 
+
+
+program: TESTY_MULTI
+
+-----------------------------------------------------------------------------------------------
+* Summary Program Information
+
+| KEY      | COMMAND                  | RET | STATE      | OUTPUT-FILE                       | VALGRIND                     | 
+| server   | ./bl_server gotham       |   0 | Done       | blather-07-server_output_file.tmp | blather-07-server_valgrd.tmp | 
+| bruce    | ./bl_client gotham Bruce |   0 | Done       | blather-07-bruce_output_file.tmp  | blather-07-bruce_valgrd.tmp  | 
+| clark    | ./bl_client gotham Clark |   0 | Done       | blather-07-clark_output_file.tmp  | blather-07-clark_valgrd.tmp  | 
+
+ALL OK

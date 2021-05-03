@@ -1,0 +1,18 @@
+(TEST 18) Four Clients + Messages
+COMMENTS:
+Four clients join and exchange messages.
+
+
+program: TESTY_MULTI
+
+-----------------------------------------------------------------------------------------------
+* Summary Program Information
+
+| KEY      | COMMAND                     | RET | STATE      | OUTPUT-FILE                       | VALGRIND                     | 
+| server   | ./bl_server central         |   0 | Done       | blather-18-server_output_file.tmp | blather-18-server_valgrd.tmp | 
+| clark1   | ./bl_client central Clark   |   0 | Done       | blather-18-clark1_output_file.tmp | blather-18-clark1_valgrd.tmp | 
+| bruce1   | ./bl_client central Bruce   |   0 | Done       | blather-18-bruce1_output_file.tmp | blather-18-bruce1_valgrd.tmp | 
+| diana1   | ./bl_client central Diana   |   0 | Done       | blather-18-diana1_output_file.tmp | blather-18-diana1_valgrd.tmp | 
+| barb1    | ./bl_client central Barbara |   0 | Done       | blather-18-barb1_output_file.tmp  | blather-18-barb1_valgrd.tmp  | 
+
+ALL OK

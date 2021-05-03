@@ -1,0 +1,524 @@
+TEST OUTPUT MISMATCH: Side by Side Differences shown below 
+- Expect output in: test-results/raw/blather-17-expect.tmp
+- Acutal output in: test-results/raw/blather-17-actual.tmp
+- Differing lines have a character like '|' and '<' in the middle
+
+#+BEGIN_SRC diff
+==== EXPECT ====                                                  ==== ACTUAL ====                                               
+>> START server ./bl_server metropolis                            >> START server ./bl_server metropolis
+>> START clark1 ./bl_client metropolis Clark                      >> START clark1 ./bl_client metropolis Clark
+>> INPUT clark1 Superman                                          >> INPUT clark1 Superman 
+>> START bruce1 ./bl_client metropolis Bruce                      >> START bruce1 ./bl_client metropolis Bruce
+>> INPUT bruce1 Batman                                            >> INPUT bruce1 Batman
+>> START lois1 ./bl_client metropolis Lois                        >> START lois1 ./bl_client metropolis Lois
+>> INPUT lois1 Investigative journalism!                          >> INPUT lois1 Investigative journalism!
+>> INPUT bruce1 Er...                                             >> INPUT bruce1 Er...
+>> INPUT clark1 <EOF>                                             >> INPUT clark1 <EOF>
+>> INPUT bruce1 See, you ruined the vibe                          >> INPUT bruce1 See, you ruined the vibe
+>> INPUT lois1 You two are so touchy                              >> INPUT lois1 You two are so touchy
+>> START clark2 ./bl_client metropolis Clark                      >> START clark2 ./bl_client metropolis Clark
+>> INPUT clark2 Faster than a speeding bullet!                    >> INPUT clark2 Faster than a speeding bullet!
+>> INPUT bruce1 I am the night!                                   >> INPUT bruce1 I am the night!
+>> INPUT lois1 Confidential sources state...                      >> INPUT lois1 Confidential sources state...
+>> INPUT clark2 <EOF>                                             >> INPUT clark2 <EOF>
+>> INPUT bruce1 <EOF>                                             >> INPUT bruce1 <EOF>
+>> INPUT lois1 Hey, I'm trying!                                   >> INPUT lois1 Hey, I'm trying!
+>> START clark3 ./bl_client metropolis Clark                      >> START clark3 ./bl_client metropolis Clark
+>> START bruce2 ./bl_client metropolis Bruce                      >> START bruce2 ./bl_client metropolis Bruce
+>> INPUT lois1 Give me one more shot                              >> INPUT lois1 Give me one more shot
+>> INPUT clark3 Okay                                              >> INPUT clark3 Okay
+>> INPUT bruce2 I have my doubts                                  >> INPUT bruce2 I have my doubts
+>> INPUT clark3 More powerful than a locomotive                   >> INPUT clark3 More powerful than a locomotive
+>> INPUT bruce2 I am vengance!                                    >> INPUT bruce2 I am vengance!
+>> INPUT lois1 Fair and balanced!                                 >> INPUT lois1 Fair and balanced!
+>> INPUT bruce2 Strike 3.                                         >> INPUT bruce2 Strike 3.
+>> INPUT clark3 Seriously?                                        >> INPUT clark3 Seriously?
+>> INPUT lois1 You guys are jerks.                                >> INPUT lois1 You guys are jerks.
+>> INPUT lois1 <EOF>                                              >> INPUT lois1 <EOF>
+>> INPUT clark3 Think we were too hard on her?                    >> INPUT clark3 Think we were too hard on her?
+>> INPUT bruce2 I am Batman!                                      >> INPUT bruce2 I am Batman!
+>> INPUT clark3 Okay. We're done here.                            >> INPUT clark3 Okay. We're done here.
+>> SIGNAL server -15                                              >> SIGNAL server -15
+>> WAIT_ALL                                                       >> WAIT_ALL
+<testy> WAIT for server                                           <testy> WAIT for server
+<testy> WAIT for clark1                                           <testy> WAIT for clark1
+<testy> WAIT for bruce1                                           <testy> WAIT for bruce1
+<testy> WAIT for lois1                                            <testy> WAIT for lois1
+<testy> WAIT for clark2                                           <testy> WAIT for clark2
+<testy> WAIT for clark3                                           <testy> WAIT for clark3
+<testy> WAIT for bruce2                                           <testy> WAIT for bruce2
+>> CHECK_ALL cat                                                  >> CHECK_ALL cat
+<testy> CHECK_FAILURES for server                                 <testy> CHECK_FAILURES for server
+<testy> CHECK_FAILURES for clark1                                 <testy> CHECK_FAILURES for clark1
+<testy> CHECK_FAILURES for bruce1                                 <testy> CHECK_FAILURES for bruce1
+<testy> CHECK_FAILURES for lois1                                  <testy> CHECK_FAILURES for lois1
+<testy> CHECK_FAILURES for clark2                                 <testy> CHECK_FAILURES for clark2
+<testy> CHECK_FAILURES for clark3                                 <testy> CHECK_FAILURES for clark3
+<testy> CHECK_FAILURES for bruce2                                 <testy> CHECK_FAILURES for bruce2
+>> OUTPUT_ALL ./test_filter_client_output                         >> OUTPUT_ALL ./test_filter_client_output
+
+<testy> OUTPUT for server                                         <testy> OUTPUT for server
+LOG: BEGIN: server_start()                                        LOG: BEGIN: server_start()
+LOG: END: server_start()                                          LOG: END: server_start()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 1 input sources                          LOG: poll()'ing to check 1 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 1                                               LOG: join_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()                                  LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Clark'                          LOG: join request for new client 'Clark'
+LOG: BEGIN: server_add_client()                                   LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                                     LOG: END: server_add_client()
+LOG: END: server_handle_join()                                    LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources                          LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1                              LOG: client 0 'Clark' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' MESSAGE 'Superman '                         LOG: client 0 'Clark' MESSAGE 'Superman '
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources                          LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 1                                               LOG: join_ready = 1
+LOG: client 0 'Clark' data_ready = 0                              LOG: client 0 'Clark' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()                                  LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Bruce'                          LOG: join request for new client 'Bruce'
+LOG: BEGIN: server_add_client()                                   LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                                     LOG: END: server_add_client()
+LOG: END: server_handle_join()                                    LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0                              LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 1                              LOG: client 1 'Bruce' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Bruce' MESSAGE 'Batman'                            LOG: client 1 'Bruce' MESSAGE 'Batman'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 1                                               LOG: join_ready = 1
+LOG: client 0 'Clark' data_ready = 0                              LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 0                              LOG: client 1 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()                                  LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Lois'                           LOG: join request for new client 'Lois'
+LOG: BEGIN: server_add_client()                                   LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                                     LOG: END: server_add_client()
+LOG: END: server_handle_join()                                    LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0                              LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 0                              LOG: client 1 'Bruce' data_ready = 0
+LOG: client 2 'Lois' data_ready = 1                               LOG: client 2 'Lois' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 2 'Lois' MESSAGE 'Investigative journalism!'          LOG: client 2 'Lois' MESSAGE 'Investigative journalism!'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0                              LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 1                              LOG: client 1 'Bruce' data_ready = 1
+LOG: client 2 'Lois' data_ready = 0                               LOG: client 2 'Lois' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Bruce' MESSAGE 'Er...'                             LOG: client 1 'Bruce' MESSAGE 'Er...'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1                              LOG: client 0 'Clark' data_ready = 1
+LOG: client 1 'Bruce' data_ready = 0                              LOG: client 1 'Bruce' data_ready = 0
+LOG: client 2 'Lois' data_ready = 0                               LOG: client 2 'Lois' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' DEPARTED                                    LOG: client 0 'Clark' DEPARTED
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 1                              LOG: client 0 'Bruce' data_ready = 1
+LOG: client 1 'Lois' data_ready = 0                               LOG: client 1 'Lois' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Bruce' MESSAGE 'See, you ruined the vibe'          LOG: client 0 'Bruce' MESSAGE 'See, you ruined the vibe'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 0                              LOG: client 0 'Bruce' data_ready = 0
+LOG: client 1 'Lois' data_ready = 1                               LOG: client 1 'Lois' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Lois' MESSAGE 'You two are so touchy'              LOG: client 1 'Lois' MESSAGE 'You two are so touchy'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 1                                               LOG: join_ready = 1
+LOG: client 0 'Bruce' data_ready = 0                              LOG: client 0 'Bruce' data_ready = 0
+LOG: client 1 'Lois' data_ready = 0                               LOG: client 1 'Lois' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()                                  LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Clark'                          LOG: join request for new client 'Clark'
+LOG: BEGIN: server_add_client()                                   LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                                     LOG: END: server_add_client()
+LOG: END: server_handle_join()                                    LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 0                              LOG: client 0 'Bruce' data_ready = 0
+LOG: client 1 'Lois' data_ready = 0                               LOG: client 1 'Lois' data_ready = 0
+LOG: client 2 'Clark' data_ready = 1                              LOG: client 2 'Clark' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 2 'Clark' MESSAGE 'Faster than a speeding bullet!'    LOG: client 2 'Clark' MESSAGE 'Faster than a speeding bullet!'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 1                              LOG: client 0 'Bruce' data_ready = 1
+LOG: client 1 'Lois' data_ready = 0                               LOG: client 1 'Lois' data_ready = 0
+LOG: client 2 'Clark' data_ready = 0                              LOG: client 2 'Clark' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Bruce' MESSAGE 'I am the night!'                   LOG: client 0 'Bruce' MESSAGE 'I am the night!'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 0                              LOG: client 0 'Bruce' data_ready = 0
+LOG: client 1 'Lois' data_ready = 1                               LOG: client 1 'Lois' data_ready = 1
+LOG: client 2 'Clark' data_ready = 0                              LOG: client 2 'Clark' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Lois' MESSAGE 'Confidential sources state...'      LOG: client 1 'Lois' MESSAGE 'Confidential sources state...'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 0                              LOG: client 0 'Bruce' data_ready = 0
+LOG: client 1 'Lois' data_ready = 0                               LOG: client 1 'Lois' data_ready = 0
+LOG: client 2 'Clark' data_ready = 1                              LOG: client 2 'Clark' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 2 'Clark' DEPARTED                                    LOG: client 2 'Clark' DEPARTED
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Bruce' data_ready = 1                              LOG: client 0 'Bruce' data_ready = 1
+LOG: client 1 'Lois' data_ready = 0                               LOG: client 1 'Lois' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Bruce' DEPARTED                                    LOG: client 0 'Bruce' DEPARTED
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources                          LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 1                               LOG: client 0 'Lois' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Lois' MESSAGE 'Hey, I'm trying!'                   LOG: client 0 'Lois' MESSAGE 'Hey, I'm trying!'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 2 input sources                          LOG: poll()'ing to check 2 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 1                                               LOG: join_ready = 1
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()                                  LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Clark'                          LOG: join request for new client 'Clark'
+LOG: BEGIN: server_add_client()                                   LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                                     LOG: END: server_add_client()
+LOG: END: server_handle_join()                                    LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 1                                               LOG: join_ready = 1
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_join()                                  LOG: BEGIN: server_handle_join()
+LOG: join request for new client 'Bruce'                          LOG: join request for new client 'Bruce'
+LOG: BEGIN: server_add_client()                                   LOG: BEGIN: server_add_client()
+LOG: END: server_add_client()                                     LOG: END: server_add_client()
+LOG: END: server_handle_join()                                    LOG: END: server_handle_join()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 1                               LOG: client 0 'Lois' data_ready = 1
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: client 2 'Bruce' data_ready = 0                              LOG: client 2 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Lois' MESSAGE 'Give me one more shot'              LOG: client 0 'Lois' MESSAGE 'Give me one more shot'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: client 1 'Clark' data_ready = 1                              LOG: client 1 'Clark' data_ready = 1
+LOG: client 2 'Bruce' data_ready = 0                              LOG: client 2 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Clark' MESSAGE 'Okay'                              LOG: client 1 'Clark' MESSAGE 'Okay'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: client 2 'Bruce' data_ready = 1                              LOG: client 2 'Bruce' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 2 'Bruce' MESSAGE 'I have my doubts'                  LOG: client 2 'Bruce' MESSAGE 'I have my doubts'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: client 1 'Clark' data_ready = 1                              LOG: client 1 'Clark' data_ready = 1
+LOG: client 2 'Bruce' data_ready = 0                              LOG: client 2 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Clark' MESSAGE 'More powerful than a locomotive'   LOG: client 1 'Clark' MESSAGE 'More powerful than a locomotive'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: client 2 'Bruce' data_ready = 1                              LOG: client 2 'Bruce' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 2 'Bruce' MESSAGE 'I am vengance!'                    LOG: client 2 'Bruce' MESSAGE 'I am vengance!'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 1                               LOG: client 0 'Lois' data_ready = 1
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: client 2 'Bruce' data_ready = 0                              LOG: client 2 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Lois' MESSAGE 'Fair and balanced!'                 LOG: client 0 'Lois' MESSAGE 'Fair and balanced!'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: client 2 'Bruce' data_ready = 1                              LOG: client 2 'Bruce' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 2 'Bruce' MESSAGE 'Strike 3.'                         LOG: client 2 'Bruce' MESSAGE 'Strike 3.'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 0                               LOG: client 0 'Lois' data_ready = 0
+LOG: client 1 'Clark' data_ready = 1                              LOG: client 1 'Clark' data_ready = 1
+LOG: client 2 'Bruce' data_ready = 0                              LOG: client 2 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Clark' MESSAGE 'Seriously?'                        LOG: client 1 'Clark' MESSAGE 'Seriously?'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 1                               LOG: client 0 'Lois' data_ready = 1
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: client 2 'Bruce' data_ready = 0                              LOG: client 2 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Lois' MESSAGE 'You guys are jerks.'                LOG: client 0 'Lois' MESSAGE 'You guys are jerks.'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 4 input sources                          LOG: poll()'ing to check 4 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Lois' data_ready = 1                               LOG: client 0 'Lois' data_ready = 1
+LOG: client 1 'Clark' data_ready = 0                              LOG: client 1 'Clark' data_ready = 0
+LOG: client 2 'Bruce' data_ready = 0                              LOG: client 2 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Lois' DEPARTED                                     LOG: client 0 'Lois' DEPARTED
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1                              LOG: client 0 'Clark' data_ready = 1
+LOG: client 1 'Bruce' data_ready = 0                              LOG: client 1 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' MESSAGE 'Think we were too hard on her?'    LOG: client 0 'Clark' MESSAGE 'Think we were too hard on her?'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 0                              LOG: client 0 'Clark' data_ready = 0
+LOG: client 1 'Bruce' data_ready = 1                              LOG: client 1 'Bruce' data_ready = 1
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 1 'Bruce' MESSAGE 'I am Batman!'                      LOG: client 1 'Bruce' MESSAGE 'I am Batman!'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value 1                         LOG: poll() completed with return value 1
+LOG: join_ready = 0                                               LOG: join_ready = 0
+LOG: client 0 'Clark' data_ready = 1                              LOG: client 0 'Clark' data_ready = 1
+LOG: client 1 'Bruce' data_ready = 0                              LOG: client 1 'Bruce' data_ready = 0
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_handle_client()                                LOG: BEGIN: server_handle_client()
+LOG: client 0 'Clark' MESSAGE 'Okay. We're done here.'            LOG: client 0 'Clark' MESSAGE 'Okay. We're done here.'
+LOG: END: server_handle_client()                                  LOG: END: server_handle_client()
+LOG: BEGIN: server_check_sources()                                LOG: BEGIN: server_check_sources()
+LOG: poll()'ing to check 3 input sources                          LOG: poll()'ing to check 3 input sources
+LOG: poll() completed with return value -1                        LOG: poll() completed with return value -1
+LOG: poll() interrupted by a signal                               LOG: poll() interrupted by a signal
+LOG: END: server_check_sources()                                  LOG: END: server_check_sources()
+LOG: BEGIN: server_shutdown()                                     LOG: BEGIN: server_shutdown()
+LOG: END: server_shutdown()                                       LOG: END: server_shutdown()
+
+<testy> OUTPUT for clark1                                         <testy> OUTPUT for clark1
+-- Clark JOINED --                                                -- Clark JOINED --
+[Clark] : Superman                                                [Clark] : Superman 
+-- Bruce JOINED --                                                -- Bruce JOINED --
+[Bruce] : Batman                                                  [Bruce] : Batman
+-- Lois JOINED --                                                 -- Lois JOINED --
+[Lois] : Investigative journalism!                                [Lois] : Investigative journalism!
+[Bruce] : Er...                                                   [Bruce] : Er...
+End of Input, Departing                                           End of Input, Departing
+Clark>>                                                           Clark>> 
+
+<testy> OUTPUT for bruce1                                         <testy> OUTPUT for bruce1
+-- Bruce JOINED --                                                -- Bruce JOINED --
+[Bruce] : Batman                                                  [Bruce] : Batman
+-- Lois JOINED --                                                 -- Lois JOINED --
+[Lois] : Investigative journalism!                                [Lois] : Investigative journalism!
+[Bruce] : Er...                                                   [Bruce] : Er...
+-- Clark DEPARTED --                                              -- Clark DEPARTED --
+[Bruce] : See, you ruined the vibe                                [Bruce] : See, you ruined the vibe
+[Lois] : You two are so touchy                                    [Lois] : You two are so touchy
+-- Clark JOINED --                                                -- Clark JOINED --
+[Clark] : Faster than a speeding bullet!                          [Clark] : Faster than a speeding bullet!
+[Bruce] : I am the night!                                         [Bruce] : I am the night!
+[Lois] : Confidential sources state...                            [Lois] : Confidential sources state...
+-- Clark DEPARTED --                                              -- Clark DEPARTED --
+End of Input, Departing                                           End of Input, Departing
+Bruce>>                                                           Bruce>> 
+
+<testy> OUTPUT for lois1                                          <testy> OUTPUT for lois1
+-- Lois JOINED --                                                 -- Lois JOINED --
+[Lois] : Investigative journalism!                                [Lois] : Investigative journalism!
+[Bruce] : Er...                                                   [Bruce] : Er...
+-- Clark DEPARTED --                                              -- Clark DEPARTED --
+[Bruce] : See, you ruined the vibe                                [Bruce] : See, you ruined the vibe
+[Lois] : You two are so touchy                                    [Lois] : You two are so touchy
+-- Clark JOINED --                                                -- Clark JOINED --
+[Clark] : Faster than a speeding bullet!                          [Clark] : Faster than a speeding bullet!
+[Bruce] : I am the night!                                         [Bruce] : I am the night!
+[Lois] : Confidential sources state...                            [Lois] : Confidential sources state...
+-- Clark DEPARTED --                                              -- Clark DEPARTED --
+-- Bruce DEPARTED --                                              -- Bruce DEPARTED --
+[Lois] : Hey, I'm trying!                                         [Lois] : Hey, I'm trying!
+-- Clark JOINED --                                                -- Clark JOINED --
+-- Bruce JOINED --                                                -- Bruce JOINED --
+[Lois] : Give me one more shot                                    [Lois] : Give me one more shot
+[Clark] : Okay                                                    [Clark] : Okay
+[Bruce] : I have my doubts                                        [Bruce] : I have my doubts
+[Clark] : More powerful than a locomotive                         [Clark] : More powerful than a locomotive
+[Bruce] : I am vengance!                                          [Bruce] : I am vengance!
+[Lois] : Fair and balanced!                                       [Lois] : Fair and balanced!
+[Bruce] : Strike 3.                                               [Bruce] : Strike 3.
+[Clark] : Seriously?                                              [Clark] : Seriously?
+[Lois] : You guys are jerks.                                      [Lois] : You guys are jerks.
+End of Input, Departing                                           End of Input, Departing
+Lois>>                                                            Lois>> 
+
+<testy> OUTPUT for clark2                                         <testy> OUTPUT for clark2
+-- Clark JOINED --                                                -- Clark JOINED --
+[Clark] : Faster than a speeding bullet!                          [Clark] : Faster than a speeding bullet!
+[Bruce] : I am the night!                                         [Bruce] : I am the night!
+[Lois] : Confidential sources state...                            [Lois] : Confidential sources state...
+End of Input, Departing                                           End of Input, Departing
+Clark>>                                                           Clark>> 
+
+<testy> OUTPUT for clark3                                         <testy> OUTPUT for clark3
+-- Clark JOINED --                                                -- Clark JOINED --
+-- Bruce JOINED --                                                -- Bruce JOINED --
+[Lois] : Give me one more shot                                    [Lois] : Give me one more shot
+[Clark] : Okay                                                    [Clark] : Okay
+[Bruce] : I have my doubts                                        [Bruce] : I have my doubts
+[Clark] : More powerful than a locomotive                         [Clark] : More powerful than a locomotive
+[Bruce] : I am vengance!                                          [Bruce] : I am vengance!
+[Lois] : Fair and balanced!                                       [Lois] : Fair and balanced!
+[Bruce] : Strike 3.                                               [Bruce] : Strike 3.
+[Clark] : Seriously?                                              [Clark] : Seriously?
+[Lois] : You guys are jerks.                                      [Lois] : You guys are jerks.
+-- Lois DEPARTED --                                               -- Lois DEPARTED --
+[Clark] : Think we were too hard on her?                          [Clark] : Think we were too hard on her?
+[Bruce] : I am Batman!                                            [Bruce] : I am Batman!
+[Clark] : Okay. We're done here.                                  [Clark] : Okay. We're done here.
+!!! server is shutting down !!!                                   !!! server is shutting down !!!
+Clark>>                                                           Clark>> 
+
+<testy> OUTPUT for bruce2                                         <testy> OUTPUT for bruce2
+-- Bruce JOINED --                                                -- Bruce JOINED --
+[Lois] : Give me one more shot                                    [Lois] : Give me one more shot
+[Clark] : Okay                                                    [Clark] : Okay
+[Bruce] : I have my doubts                                        [Bruce] : I have my doubts
+[Clark] : More powerful than a locomotive                         [Clark] : More powerful than a locomotive
+[Bruce] : I am vengance!                                          [Bruce] : I am vengance!
+[Lois] : Fair and balanced!                                       [Lois] : Fair and balanced!
+[Bruce] : Strike 3.                                               [Bruce] : Strike 3.
+[Clark] : Seriously?                                              [Clark] : Seriously?
+[Lois] : You guys are jerks.                                      [Lois] : You guys are jerks.
+-- Lois DEPARTED --                                               -- Lois DEPARTED --
+[Clark] : Think we were too hard on her?                          [Clark] : Think we were too hard on her?
+[Bruce] : I am Batman!                                            [Bruce] : I am Batman!
+[Clark] : Okay. We're done here.                                  [Clark] : Okay. We're done here.
+!!! server is shutting down !!!                                   !!! server is shutting down !!!
+Bruce>>                                                           Bruce>> 
+
+                                                                )
+                                                                )
+                                                                )
+                                                                )
+                                                                )
+                                                                )
+                                                                )
+#+END_SRC
+
+--- Line Differences ---

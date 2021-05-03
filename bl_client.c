@@ -174,7 +174,7 @@ int main(int argc, char *argv[]) {
     check_fail(fd==-1, 1, "Couldn't open file %s", join_name);
     
     write(fd, join, sizeof(*join));
-    close(fd);    // client won't need join_fd anymore
+    //close(fd);    // client won't need join_fd anymore
 
     char prompt[MAXNAME+3];
     snprintf(prompt, MAXNAME+3, "%s>> ",argv[2]); // create a prompt string
@@ -190,6 +190,7 @@ int main(int argc, char *argv[]) {
     simpio_reset_terminal_mode();
     printf("\n");
     
+    close(fd);
     close(client->to_client_fd);
     close(client->to_server_fd);
     remove(client->to_client_fname);

@@ -1,0 +1,19 @@
+(TEST 6) Two Clients Join and Depart
+COMMENTS:
+Two clients join but do not exchange messages. The server should LOG
+these and also broadcast to the exiting client when the second client
+arrives. The departures due to EOF should also be broadcast by the
+server. 
+
+
+program: TESTY_MULTI
+
+-----------------------------------------------------------------------------------------------
+* Summary Program Information
+
+| KEY      | COMMAND                  | RET | STATE      | OUTPUT-FILE                       | VALGRIND                     | 
+| server   | ./bl_server gotham       |   0 | Done       | blather-06-server_output_file.tmp | blather-06-server_valgrd.tmp | 
+| bruce    | ./bl_client gotham Bruce |   0 | Done       | blather-06-bruce_output_file.tmp  | blather-06-bruce_valgrd.tmp  | 
+| clark    | ./bl_client gotham Clark |   0 | Done       | blather-06-clark_output_file.tmp  | blather-06-clark_valgrd.tmp  | 
+
+ALL OK

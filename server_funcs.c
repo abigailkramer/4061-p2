@@ -2,7 +2,7 @@
 
 #include "blather.h"
 
-char sem_name[MAXPATH];
+char sem_name[MAXPATH] = "";
 
 client_t *server_get_client(server_t *server, int idx) {
     if (idx > server->n_clients) {
@@ -28,7 +28,7 @@ void server_start(server_t *server, char *server_name, int perms) {
     check_fail(server->join_fd==-1, 1, "Couldn't open file %s", server->server_name);
 
     // ADVANCED: create log and semaphore
-    char log_name[MAXPATH];
+    char log_name[MAXPATH] = "";
     strncpy(log_name, server_name, sizeof(server_name));
     strncat(log_name, ".log", sizeof(".log"));
     

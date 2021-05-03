@@ -1,0 +1,20 @@
+(TEST 17) Three Clients + Rejoining
+COMMENTS:
+Three clients join and there are several departures and rejoins. 
+
+
+program: TESTY_MULTI
+
+-----------------------------------------------------------------------------------------------
+* Summary Program Information
+
+| KEY      | COMMAND                      | RET | STATE      | OUTPUT-FILE                       | VALGRIND                     | 
+| server   | ./bl_server metropolis       |   0 | Done       | blather-17-server_output_file.tmp | blather-17-server_valgrd.tmp | 
+| clark1   | ./bl_client metropolis Clark |   0 | Done       | blather-17-clark1_output_file.tmp | blather-17-clark1_valgrd.tmp | 
+| bruce1   | ./bl_client metropolis Bruce |   0 | Done       | blather-17-bruce1_output_file.tmp | blather-17-bruce1_valgrd.tmp | 
+| lois1    | ./bl_client metropolis Lois  |   0 | Done       | blather-17-lois1_output_file.tmp  | blather-17-lois1_valgrd.tmp  | 
+| clark2   | ./bl_client metropolis Clark |   0 | Done       | blather-17-clark2_output_file.tmp | blather-17-clark2_valgrd.tmp | 
+| clark3   | ./bl_client metropolis Clark |   0 | Done       | blather-17-clark3_output_file.tmp | blather-17-clark3_valgrd.tmp | 
+| bruce2   | ./bl_client metropolis Bruce |   0 | Done       | blather-17-bruce2_output_file.tmp | blather-17-bruce2_valgrd.tmp | 
+
+ALL OK
