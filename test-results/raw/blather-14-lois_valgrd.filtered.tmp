@@ -1,15 +1,15 @@
-==2293710== Memcheck, a memory error detector
-==2293710== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==2293710== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==2293710== Command: ./bl_client metropolis Lois
-==2293710== Parent PID: 2293707
-==2293710== 
-==2293710== 
-==2293710== HEAP SUMMARY:
-==2293710==     in use at exit: 0 bytes in 0 blocks
-==2293710==   total heap usage: 7 allocs, 7 frees, 2,254 bytes allocated
-==2293710== 
-==2293710== All heap blocks were freed -- no leaks are possible
-==2293710== 
-==2293710== For lists of detected and suppressed errors, rerun with: -s
-==2293710== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==2296713== Memcheck, a memory error detector
+==2296713== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2296713== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==2296713== Command: ./bl_client metropolis Lois
+==2296713== Parent PID: 2296710
+==2296713== 
+==2296713== 
+==2296713== HEAP SUMMARY:
+==2296713==     in use at exit: 0 bytes in 0 blocks
+==2296713==   total heap usage: 7 allocs, 7 frees, 2,254 bytes allocated
+==2296713== 
+==2296713== All heap blocks were freed -- no leaks are possible
+==2296713== 
+==2296713== For lists of detected and suppressed errors, rerun with: -s
+==2296713== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

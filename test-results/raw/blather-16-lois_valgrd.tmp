@@ -1,20 +1,20 @@
-==2293939== Memcheck, a memory error detector
-==2293939== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==2293939== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==2293939== Command: ./bl_client metropolis Lois
-==2293939== Parent PID: 2293937
-==2293939== 
-==2293939== 
-==2293939== HEAP SUMMARY:
-==2293939==     in use at exit: 1,654 bytes in 4 blocks
-==2293939==   total heap usage: 7 allocs, 3 frees, 2,254 bytes allocated
-==2293939== 
-==2293939== LEAK SUMMARY:
-==2293939==    definitely lost: 0 bytes in 0 blocks
-==2293939==    indirectly lost: 0 bytes in 0 blocks
-==2293939==      possibly lost: 0 bytes in 0 blocks
-==2293939==    still reachable: 0 bytes in 0 blocks
-==2293939==         suppressed: 1,654 bytes in 4 blocks
-==2293939== 
-==2293939== For lists of detected and suppressed errors, rerun with: -s
-==2293939== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==2296943== Memcheck, a memory error detector
+==2296943== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2296943== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==2296943== Command: ./bl_client metropolis Lois
+==2296943== Parent PID: 2296941
+==2296943== 
+==2296943== 
+==2296943== HEAP SUMMARY:
+==2296943==     in use at exit: 1,654 bytes in 4 blocks
+==2296943==   total heap usage: 7 allocs, 3 frees, 2,254 bytes allocated
+==2296943== 
+==2296943== LEAK SUMMARY:
+==2296943==    definitely lost: 0 bytes in 0 blocks
+==2296943==    indirectly lost: 0 bytes in 0 blocks
+==2296943==      possibly lost: 0 bytes in 0 blocks
+==2296943==    still reachable: 0 bytes in 0 blocks
+==2296943==         suppressed: 1,654 bytes in 4 blocks
+==2296943== 
+==2296943== For lists of detected and suppressed errors, rerun with: -s
+==2296943== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
