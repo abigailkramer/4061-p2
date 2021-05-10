@@ -1,27 +1,0 @@
-[2KF>> [2K-- F JOINED --
-F>> [2K-- G JOINED --
-F>> [2K-- H JOINED --
-F>> [2K[A] : 9
-F>> [2K[D] : 10
-F>> [2K[E] : 11
-F>> [2K[C] : 12
-F>> [2K[B] : 13
-F>> [2K-- C DEPARTED --
-F>> 14[2KF>> [2K[F] : 14
-F>> [2K[G] : 15
-F>> [2K[D] : 16
-F>> [2K[E] : 17
-F>> [2K[B] : 18
-F>> [2K-- D DEPARTED --
-F>> 19[2KF>> [2K[F] : 19
-F>> 20[2KF>> [2K[F] : 20
-F>> [2K[E] : 21
-F>> [2K[A] : 22
-F>> [2K-- G DEPARTED --
-F>> [2K[B] : 23
-F>> [2K-- A DEPARTED --
-F>> [2K-- B DEPARTED --
-F>> 24[2KF>> [2K[F] : 24
-F>> [2K-- E DEPARTED --
-F>> [2KEnd of Input, Departing
-F>> 
